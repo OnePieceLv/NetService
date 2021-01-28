@@ -64,6 +64,8 @@
 		B034B02325C30AAD005187C4 /* URLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3225C2AB3A005187C4 /* URLSessionManager.swift */; };
 		B034B02825C30AE4005187C4 /* NetServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF1925C2AAA2005187C4 /* NetServiceTests.swift */; };
 		B034B03525C30C70005187C4 /* BaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF6325C2AC30005187C4 /* BaseTestCase.swift */; };
+		B034B03A25C30D38005187C4 /* unicorn.png in Resources */ = {isa = PBXBuildFile; fileRef = B034AF5F25C2AC30005187C4 /* unicorn.png */; };
+		B034B03B25C30D3B005187C4 /* rainbow.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B034AF6025C2AC30005187C4 /* rainbow.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -418,6 +420,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B034B03B25C30D3B005187C4 /* rainbow.jpg in Resources */,
+				B034B03A25C30D38005187C4 /* unicorn.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
