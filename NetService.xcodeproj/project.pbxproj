@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B034AF1525C2AAA2005187C4 /* NetService_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B034AF0B25C2AAA2005187C4 /* NetService_iOS.framework */; };
+		B034AF1525C2AAA2005187C4 /* NetService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B034AF0B25C2AAA2005187C4 /* NetService.framework */; };
 		B034AF1A25C2AAA2005187C4 /* NetServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF1925C2AAA2005187C4 /* NetServiceTests.swift */; };
 		B034AF1C25C2AAA2005187C4 /* NetService.h in Headers */ = {isa = PBXBuildFile; fileRef = B034AF0E25C2AAA2005187C4 /* NetService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B034AF3B25C2AB3A005187C4 /* MultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2825C2AB3A005187C4 /* MultipartFormData.swift */; };
@@ -37,7 +37,33 @@
 		B034AF6925C2AC30005187C4 /* rainbow.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B034AF6025C2AC30005187C4 /* rainbow.jpg */; };
 		B034AF6A25C2AC30005187C4 /* DownloadServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF6225C2AC30005187C4 /* DownloadServiceTests.swift */; };
 		B034AF6B25C2AC30005187C4 /* BaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF6325C2AC30005187C4 /* BaseTestCase.swift */; };
-		B034AFD625C2EFEB005187C4 /* NetService_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B034AFCD25C2EFEB005187C4 /* NetService_macOS.framework */; };
+		B034AFD625C2EFEB005187C4 /* NetService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B034AFCD25C2EFEB005187C4 /* NetService.framework */; };
+		B034AFFC25C30A4F005187C4 /* SessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5925C2AC30005187C4 /* SessionDelegateTests.swift */; };
+		B034AFFD25C30A52005187C4 /* BaseDataServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5A25C2AC30005187C4 /* BaseDataServiceTests.swift */; };
+		B034B00225C30A55005187C4 /* UploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5B25C2AC30005187C4 /* UploadTests.swift */; };
+		B034B00725C30A59005187C4 /* AuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5C25C2AC30005187C4 /* AuthorizationTests.swift */; };
+		B034B00C25C30A5D005187C4 /* DownloadServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF6225C2AC30005187C4 /* DownloadServiceTests.swift */; };
+		B034B01125C30AAD005187C4 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5425C2AB9E005187C4 /* APIError.swift */; };
+		B034B01225C30AAD005187C4 /* BaseDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2F25C2AB3A005187C4 /* BaseDataService.swift */; };
+		B034B01325C30AAD005187C4 /* Middleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3A25C2AB3A005187C4 /* Middleware.swift */; };
+		B034B01425C30AAD005187C4 /* MultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2825C2AB3A005187C4 /* MultipartFormData.swift */; };
+		B034B01525C30AAD005187C4 /* NetBuilders.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3025C2AB3A005187C4 /* NetBuilders.swift */; };
+		B034B01625C30AAD005187C4 /* NetBuilders+Authorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2E25C2AB3A005187C4 /* NetBuilders+Authorization.swift */; };
+		B034B01725C30AAD005187C4 /* NetBuilders+CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2D25C2AB3A005187C4 /* NetBuilders+CacheControl.swift */; };
+		B034B01825C30AAD005187C4 /* NetBuilders+ContentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3525C2AB3A005187C4 /* NetBuilders+ContentType.swift */; };
+		B034B01925C30AAD005187C4 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2925C2AB3A005187C4 /* ParameterEncoding.swift */; };
+		B034B01A25C30AAD005187C4 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3925C2AB3A005187C4 /* Request.swift */; };
+		B034B01B25C30AAD005187C4 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2C25C2AB3A005187C4 /* RequestBuilder.swift */; };
+		B034B01C25C30AAD005187C4 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3425C2AB3A005187C4 /* Response.swift */; };
+		B034B01D25C30AAD005187C4 /* Result+APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2B25C2AB3A005187C4 /* Result+APIClient.swift */; };
+		B034B01E25C30AAD005187C4 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3125C2AB3A005187C4 /* Retry.swift */; };
+		B034B01F25C30AAD005187C4 /* ServerTrustPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2A25C2AB3A005187C4 /* ServerTrustPolicy.swift */; };
+		B034B02025C30AAD005187C4 /* ServiceAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3325C2AB3A005187C4 /* ServiceAgent.swift */; };
+		B034B02125C30AAD005187C4 /* SessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3625C2AB3A005187C4 /* SessionDelegate.swift */; };
+		B034B02225C30AAD005187C4 /* TaskDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3725C2AB3A005187C4 /* TaskDelegate.swift */; };
+		B034B02325C30AAD005187C4 /* URLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3225C2AB3A005187C4 /* URLSessionManager.swift */; };
+		B034B02825C30AE4005187C4 /* NetServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF1925C2AAA2005187C4 /* NetServiceTests.swift */; };
+		B034B03525C30C70005187C4 /* BaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF6325C2AC30005187C4 /* BaseTestCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +84,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B034AF0B25C2AAA2005187C4 /* NetService_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetService_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B034AF0B25C2AAA2005187C4 /* NetService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B034AF0E25C2AAA2005187C4 /* NetService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetService.h; sourceTree = "<group>"; };
 		B034AF0F25C2AAA2005187C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B034AF1425C2AAA2005187C4 /* NetService iOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NetService iOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,7 +117,7 @@
 		B034AF6025C2AC30005187C4 /* rainbow.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = rainbow.jpg; sourceTree = "<group>"; };
 		B034AF6225C2AC30005187C4 /* DownloadServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadServiceTests.swift; sourceTree = "<group>"; };
 		B034AF6325C2AC30005187C4 /* BaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestCase.swift; sourceTree = "<group>"; };
-		B034AFCD25C2EFEB005187C4 /* NetService_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetService_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B034AFCD25C2EFEB005187C4 /* NetService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B034AFD525C2EFEB005187C4 /* NetService macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NetService macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -107,7 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B034AF1525C2AAA2005187C4 /* NetService_iOS.framework in Frameworks */,
+				B034AF1525C2AAA2005187C4 /* NetService.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,7 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B034AFD625C2EFEB005187C4 /* NetService_macOS.framework in Frameworks */,
+				B034AFD625C2EFEB005187C4 /* NetService.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,9 +168,9 @@
 		B034AF0C25C2AAA2005187C4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B034AF0B25C2AAA2005187C4 /* NetService_iOS.framework */,
+				B034AF0B25C2AAA2005187C4 /* NetService.framework */,
 				B034AF1425C2AAA2005187C4 /* NetService iOS Tests.xctest */,
-				B034AFCD25C2EFEB005187C4 /* NetService_macOS.framework */,
+				B034AFCD25C2EFEB005187C4 /* NetService.framework */,
 				B034AFD525C2EFEB005187C4 /* NetService macOS Tests.xctest */,
 			);
 			name = Products;
@@ -262,7 +288,7 @@
 			);
 			name = "NetService iOS";
 			productName = NetService;
-			productReference = B034AF0B25C2AAA2005187C4 /* NetService_iOS.framework */;
+			productReference = B034AF0B25C2AAA2005187C4 /* NetService.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		B034AF1325C2AAA2005187C4 /* NetService iOS Tests */ = {
@@ -298,7 +324,7 @@
 			);
 			name = "NetService macOS";
 			productName = NetService;
-			productReference = B034AFCD25C2EFEB005187C4 /* NetService_macOS.framework */;
+			productReference = B034AFCD25C2EFEB005187C4 /* NetService.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		B034AFD425C2EFEB005187C4 /* NetService macOS Tests */ = {
@@ -442,6 +468,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B034B01125C30AAD005187C4 /* APIError.swift in Sources */,
+				B034B01225C30AAD005187C4 /* BaseDataService.swift in Sources */,
+				B034B01325C30AAD005187C4 /* Middleware.swift in Sources */,
+				B034B01425C30AAD005187C4 /* MultipartFormData.swift in Sources */,
+				B034B01525C30AAD005187C4 /* NetBuilders.swift in Sources */,
+				B034B01625C30AAD005187C4 /* NetBuilders+Authorization.swift in Sources */,
+				B034B01725C30AAD005187C4 /* NetBuilders+CacheControl.swift in Sources */,
+				B034B01825C30AAD005187C4 /* NetBuilders+ContentType.swift in Sources */,
+				B034B01925C30AAD005187C4 /* ParameterEncoding.swift in Sources */,
+				B034B01A25C30AAD005187C4 /* Request.swift in Sources */,
+				B034B01B25C30AAD005187C4 /* RequestBuilder.swift in Sources */,
+				B034B01C25C30AAD005187C4 /* Response.swift in Sources */,
+				B034B01D25C30AAD005187C4 /* Result+APIClient.swift in Sources */,
+				B034B01E25C30AAD005187C4 /* Retry.swift in Sources */,
+				B034B01F25C30AAD005187C4 /* ServerTrustPolicy.swift in Sources */,
+				B034B02025C30AAD005187C4 /* ServiceAgent.swift in Sources */,
+				B034B02125C30AAD005187C4 /* SessionDelegate.swift in Sources */,
+				B034B02225C30AAD005187C4 /* TaskDelegate.swift in Sources */,
+				B034B02325C30AAD005187C4 /* URLSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +494,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B034AFFD25C30A52005187C4 /* BaseDataServiceTests.swift in Sources */,
+				B034AFFC25C30A4F005187C4 /* SessionDelegateTests.swift in Sources */,
+				B034B00225C30A55005187C4 /* UploadTests.swift in Sources */,
+				B034B03525C30C70005187C4 /* BaseTestCase.swift in Sources */,
+				B034B00725C30A59005187C4 /* AuthorizationTests.swift in Sources */,
+				B034B00C25C30A5D005187C4 /* DownloadServiceTests.swift in Sources */,
+				B034B02825C30AE4005187C4 /* NetServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -609,7 +661,7 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = cn.nengxuehui.NetService;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = NetService;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -636,7 +688,7 @@
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = cn.nengxuehui.NetService;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = NetService;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -684,7 +736,7 @@
 		B034AFDF25C2EFEB005187C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -692,7 +744,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = NetService/Info.plist;
+				INFOPLIST_FILE = "Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -701,7 +753,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.nengxuehui.NetService;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = NetService;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -711,7 +763,7 @@
 		B034AFE025C2EFEB005187C4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -719,7 +771,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = NetService/Info.plist;
+				INFOPLIST_FILE = "Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -728,7 +780,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.nengxuehui.NetService;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = NetService;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -738,6 +790,7 @@
 		B034AFE225C2EFEB005187C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = P7TTM4H4X2;
@@ -758,6 +811,7 @@
 		B034AFE325C2EFEB005187C4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = P7TTM4H4X2;

@@ -285,7 +285,7 @@ public enum ServerTrustPolicy {
         let trustCreationStatus = SecTrustCreateWithCertificates(certificate, policy, &trust)
 
         if let trust = trust, trustCreationStatus == errSecSuccess {
-            if #available(iOS 14, *) {
+            if #available(iOS 14, macOS 11, *) {
                 publicKey = SecTrustCopyKey(trust)
             } else {
                 publicKey = SecTrustCopyPublicKey(trust)
