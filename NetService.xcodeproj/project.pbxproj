@@ -231,8 +231,8 @@
 				B034AF5A25C2AC30005187C4 /* BaseDataServiceTests.swift */,
 				B034AF5B25C2AC30005187C4 /* UploadTests.swift */,
 				B034AF5C25C2AC30005187C4 /* AuthorizationTests.swift */,
-				B034AF5D25C2AC30005187C4 /* Resources */,
 				B034AF6225C2AC30005187C4 /* DownloadServiceTests.swift */,
+				B034AF5D25C2AC30005187C4 /* Resources */,
 			);
 			path = NetService;
 			sourceTree = "<group>";
