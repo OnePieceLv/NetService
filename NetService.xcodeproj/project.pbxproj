@@ -66,6 +66,9 @@
 		B034B03525C30C70005187C4 /* BaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF6325C2AC30005187C4 /* BaseTestCase.swift */; };
 		B034B03A25C30D38005187C4 /* unicorn.png in Resources */ = {isa = PBXBuildFile; fileRef = B034AF5F25C2AC30005187C4 /* unicorn.png */; };
 		B034B03B25C30D3B005187C4 /* rainbow.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B034AF6025C2AC30005187C4 /* rainbow.jpg */; };
+		B034B05625C31AA8005187C4 /* NetService.podspec in Resources */ = {isa = PBXBuildFile; fileRef = B034B05425C31AA8005187C4 /* NetService.podspec */; };
+		B034B05725C31AA8005187C4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B034B05525C31AA8005187C4 /* LICENSE */; };
+		B034B05E25C31B35005187C4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B034B05D25C31B35005187C4 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +124,9 @@
 		B034AF6325C2AC30005187C4 /* BaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestCase.swift; sourceTree = "<group>"; };
 		B034AFCD25C2EFEB005187C4 /* NetService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B034AFD525C2EFEB005187C4 /* NetService macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NetService macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B034B05425C31AA8005187C4 /* NetService.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NetService.podspec; sourceTree = "<group>"; };
+		B034B05525C31AA8005187C4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		B034B05D25C31B35005187C4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +166,8 @@
 		B034AF0125C2AAA2005187C4 = {
 			isa = PBXGroup;
 			children = (
+				B034B05C25C31B22005187C4 /* Documentation */,
+				B034B05325C31A93005187C4 /* Deployment */,
 				B034AF0D25C2AAA2005187C4 /* NetService */,
 				B034AF2725C2AB0E005187C4 /* Supporting Files */,
 				B034AF1825C2AAA2005187C4 /* NetServiceTests */,
@@ -252,6 +260,23 @@
 				B034AF6025C2AC30005187C4 /* rainbow.jpg */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		B034B05325C31A93005187C4 /* Deployment */ = {
+			isa = PBXGroup;
+			children = (
+				B034B05525C31AA8005187C4 /* LICENSE */,
+				B034B05425C31AA8005187C4 /* NetService.podspec */,
+			);
+			name = Deployment;
+			sourceTree = "<group>";
+		};
+		B034B05C25C31B22005187C4 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				B034B05D25C31B35005187C4 /* README.md */,
+			);
+			name = Documentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -397,6 +422,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B034B05E25C31B35005187C4 /* README.md in Resources */,
+				B034B05725C31AA8005187C4 /* LICENSE in Resources */,
+				B034B05625C31AA8005187C4 /* NetService.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
