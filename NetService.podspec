@@ -5,9 +5,10 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/OnePieceLv/NetService"
   s.license      = {:type =>"MIT", :file => "LICENSE"}
   s.author             = { "steven lv" => "steven.suzhou@gmail.com" }
+  s.swift_version = "5.0"
   s.ios.deployment_target = "10.0"
   s.osx.deployment_target = "10.15"
-  s.source       = { :git => "https://github.com/OnePieceLv/NetService", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/OnePieceLv/NetService.git", :tag => "#{s.version}" }
   s.source_files  = "NetService", "NetService/**/*swift"
   s.frameworks = "Foundation"
 end
