@@ -1,0 +1,10 @@
+inhibit_all_warnings!
+use_frameworks!
+
+target 'iOSDemo' do
+    pod 'NetService', :path => '../../'
+end
+
+target 'iOSDemoTests' do
+    pod 'NetService', :path => '../../'
+end

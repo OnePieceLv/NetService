@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B034AF0A25C2AAA2005187C4"
-               BuildableName = "NetService_iOS.framework"
+               BuildableName = "NetService.framework"
                BlueprintName = "NetService iOS"
                ReferencedContainer = "container:NetService.xcodeproj">
             </BuildableReference>
@@ -51,7 +51,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B034AF0A25C2AAA2005187C4"
-            BuildableName = "NetService_iOS.framework"
+            BuildableName = "NetService.framework"
             BlueprintName = "NetService iOS"
             ReferencedContainer = "container:NetService.xcodeproj">
          </BuildableReference>
