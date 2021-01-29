@@ -62,7 +62,7 @@ public class BaseAPIService: NSObject {
         self.credential = credential
     }
     
-    func prepareRequest() throws -> URLRequest {
+    fileprivate func prepareRequest() throws -> URLRequest {
         let api = try conformance()
         builder = api.httpBuilderHelper(builder: RequestBuilder(urlString: api.urlString))
         builder = middlewares.reduce(builder) { return $1.prepare($0) }
@@ -73,22 +73,22 @@ public class BaseAPIService: NSObject {
         return request
     }
     
-    func beforeResume() -> Void {
+    fileprivate func beforeResume() -> Void {
         middlewares.forEach({ $0.beforeSend(self) })
     }
     
-    func finishRequest() -> Void {
+    fileprivate func finishRequest() -> Void {
         middlewares.forEach({ $0.didStop(self) })
         self.clear()
     }
     
-    func clear() -> Void {
+    fileprivate func clear() -> Void {
         self.removeRequest(task: self.task)
         progressHandle = nil
         completionClosure = nil
     }
     
-    func resume(with task: URLSessionTask?) -> Void {
+    fileprivate func resume(with task: URLSessionTask?) -> Void {
         if let task = task {
             self.task = task
         }
@@ -100,14 +100,14 @@ public class BaseAPIService: NSObject {
         task.resume()
     }
     
-    func suspend() -> Void {
+    fileprivate func suspend() -> Void {
         guard let task = self.task else {
             return
         }
         task.suspend()
     }
     
-    func cancel() -> Void {
+    fileprivate func cancel() -> Void {
         guard let task = self.task else {
             return
         }
@@ -115,11 +115,11 @@ public class BaseAPIService: NSObject {
         self.removeRequest(task: task)
     }
     
-    func addRequest(task: URLSessionTask) -> Void {
+    fileprivate func addRequest(task: URLSessionTask) -> Void {
         ServiceAgent.shared[task] = self
     }
     
-    func removeRequest(task: URLSessionTask?) -> Void {
+    fileprivate func removeRequest(task: URLSessionTask?) -> Void {
         guard let task = task else {
             return
         }
@@ -154,14 +154,14 @@ public class BaseDataService: BaseAPIService {
     
     private var urlRequest: URLRequest?
     
-    override func finishRequest() {
+    override fileprivate func finishRequest() {
         if let completeHandler = self.completionClosure {
             completeHandler()
         }
         super.finishRequest()
     }
     
-    override func clear() {
+    override fileprivate func clear() {
         super.clear()
         urlRequest = nil
     }
@@ -298,7 +298,7 @@ public class BaseDownloadService: BaseAPIService {
         return self
     }
     
-    override func cancel() {
+    override fileprivate func cancel() {
         self.cancel(createResumeData: true)
         self.removeRequest(task: self.task)
     }
@@ -382,7 +382,7 @@ public class BaseUploadService: BaseAPIService {
     
     var response: DataResponse?
     
-    override func clear() {
+    override fileprivate func clear() {
         self.uploadProgress = nil
         super.clear()
     }
