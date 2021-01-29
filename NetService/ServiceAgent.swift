@@ -116,7 +116,7 @@ extension ServiceAgent: Service {
                                     uploadProgress: uploadProgress,
                                     downloadProgress: downloadProgress) { (res: TaskResult) in
             let result = DataResponse.serializeResponseData(response: res.response, data: res.data, error: res.error)
-            let response = DataResponse(response: res.response, data: res.data, metrics: res.metrics ,result: result)
+            let response = DataResponse(request: res.task.originalRequest ?? request, response: res.response, data: res.data, metrics: res.metrics ,result: result)
             completion(response)
             
         }
@@ -133,7 +133,8 @@ extension ServiceAgent: Service {
                                         uploadProgress: uploadProgress,
                                         downloadProgress: downloadProgress) { (res: TaskResult) in
             let result = DataResponse.serializeResponseData(response: res.response, data: res.data, error: res.error)
-            let response = DataResponse(response: res.response, data: res.data, metrics: res.metrics, result: result)
+            
+            let response = DataResponse(request: res.task.originalRequest ?? upload.request(), response: res.response, data: res.data, metrics: res.metrics, result: result)
             completion(response)
         }
         return uploadTask

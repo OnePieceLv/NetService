@@ -31,6 +31,8 @@ public struct DefaultJSONTransform: ObjectTransformProtocol {
 
 
 public struct DataResponse {
+    
+    public let request: URLRequest
         
     public let response: HTTPURLResponse?
     
@@ -48,11 +50,13 @@ public struct DataResponse {
     
     public var error: Error? { result.failure }
     
-    public init(response: HTTPURLResponse?,
+    public init(request: URLRequest,
+                response: HTTPURLResponse?,
                 data: Data?,
                 metrics: URLSessionTaskMetrics?,
                 result: Result<Data, Error>
     ) {
+        self.request = request
         self.response = response
         self.data = data
         self.result = result
@@ -138,7 +142,7 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
     /// The textual representation used when written to an output stream, which includes whether the result was a
     /// success or failure.
     public var description: String {
-        "\(result.debugDescription)"
+        "\(self.debugDescription)"
     }
 
     /// The debug textual representation used when written to an output stream, which includes (if available) a summary
@@ -146,8 +150,30 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
     /// `HTTPURLResponse`'s status code, headers, and body; the duration of the network and serialization actions; and
     /// the `Result` of serialization.
     public var debugDescription: String {
-        return "[Debug Result]: \(DebugDescription.description(of: self.response))"
+        var result = ""
+        if let response = self.response {
+            result = "[Status Code]: \(response.statusCode) \n"
+        } else {
+            result = "[response] none \n"
+        }
+        if let headers = self.response?.allHeaderFields {
+            result += "[Headers]: \(headers.reduce(""){ $0 + "\($1.key)\($1.value)" }) \n"
+        } else {
+            result += "[Headers]: none \n"
+        }
+        if let data = self.data {
+            result += "[Response]:\(String(decoding: data, as: UTF8.self).trimmingCharacters(in:.whitespacesAndNewlines).indentingNewlines())"
+        } else {
+            result += "[Response]: none \n"
+        }
+        return """
+                [Debug Response]:
+                    \(result)
+                    [Request]: \(DebugDescription.description(of: self.request))
+               """
     }
+    
+    
 }
 
 // MARK - DebugDescription
@@ -162,23 +188,6 @@ private enum DebugDescription {
         [Request]: \(requestSummary)
             \(requestHeadersDescription.indentingNewlines())
             \(requestBodyDescription.indentingNewlines())
-        """
-    }
-
-    static func description(of response: HTTPURLResponse?) -> String {
-        """
-        [Response]:
-            [Status Code]: \(response?.statusCode ?? -1)
-        """
-    }
-
-    static func description(for headers: [String: String]) -> String {
-        guard !headers.isEmpty else { return "[Headers]: None" }
-
-        let headerDescription = "\(headers.sorted(by: >))".indentingNewlines()
-        return """
-        [Headers]:
-            \(headerDescription)
         """
     }
 

@@ -38,6 +38,17 @@ public enum Uploadable {
         }
         return task
     }
+    
+    func request() -> URLRequest {
+        switch self {
+        case .data(let _, let urlRequest):
+            return urlRequest
+        case .file(let _, let urlRequest):
+            return urlRequest
+        case .stream(let _, let urlRequest):
+            return urlRequest
+        }
+    }
 }
 
 public enum Downloadable {
