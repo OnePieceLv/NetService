@@ -41,11 +41,11 @@ public enum Uploadable {
     
     func request() -> URLRequest {
         switch self {
-        case .data(let _, let urlRequest):
+        case .data(_, let urlRequest):
             return urlRequest
-        case .file(let _, let urlRequest):
+        case .file(_, let urlRequest):
             return urlRequest
-        case .stream(let _, let urlRequest):
+        case .stream(_, let urlRequest):
             return urlRequest
         }
     }
