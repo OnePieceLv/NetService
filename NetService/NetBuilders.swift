@@ -218,7 +218,7 @@ extension NetBuilders.HTTPHeader {
 extension NetBuilders.HTTPHeader {
     
     static let version: String = {
-      return "0.0.1"
+      return "0.9.0"
     }()
     /// Returns NetService's default `Accept-Encoding` header, appropriate for the encodings supported by particular OS
     /// versions.
