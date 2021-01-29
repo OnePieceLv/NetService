@@ -1,14 +1,11 @@
 //
 //  Result+APIClient.swift
-//  Merlin-iOS
+//  NetService
 //
 //  Created by steven on 2021/1/5.
 //
 
 import Foundation
-
-/// Default type of `Result` returned by NetService, with an `AFError` `Failure` type.
-public typealias APIResult<Success> = Result<Success, APIError>
 
 // MARK: - Internal APIs
 

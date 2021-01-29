@@ -1,6 +1,6 @@
 //
 //  APITaskRequest.swift
-//  Merlin-iOS
+//  NetService
 //
 //  Created by steven on 2021/1/21.
 //
@@ -66,11 +66,11 @@ public class BaseAPIService: NSObject {
         let api = try conformance()
         builder = api.httpBuilderHelper(builder: RequestBuilder(urlString: api.urlString))
         builder = middlewares.reduce(builder) { return $1.prepare($0) }
-        let request = try api.asURLRequest(with: builder)
         if case .basic(let user, let password) = builder.authorization {
             authenticate(user: user, password: password)
         }
-        return try api.encoding.encode(request, parameters: api.parameters)
+        let request = try api.asURLRequest(with: builder)
+        return request
     }
     
     func beforeResume() -> Void {

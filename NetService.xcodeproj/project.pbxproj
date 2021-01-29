@@ -13,7 +13,7 @@
 		B034AF3B25C2AB3A005187C4 /* MultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2825C2AB3A005187C4 /* MultipartFormData.swift */; };
 		B034AF3C25C2AB3A005187C4 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2925C2AB3A005187C4 /* ParameterEncoding.swift */; };
 		B034AF3D25C2AB3A005187C4 /* ServerTrustPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2A25C2AB3A005187C4 /* ServerTrustPolicy.swift */; };
-		B034AF3E25C2AB3A005187C4 /* Result+APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2B25C2AB3A005187C4 /* Result+APIClient.swift */; };
+		B034AF3E25C2AB3A005187C4 /* Result+InternalExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2B25C2AB3A005187C4 /* Result+InternalExtension.swift */; };
 		B034AF3F25C2AB3A005187C4 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2C25C2AB3A005187C4 /* RequestBuilder.swift */; };
 		B034AF4025C2AB3A005187C4 /* NetBuilders+CacheControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2D25C2AB3A005187C4 /* NetBuilders+CacheControl.swift */; };
 		B034AF4125C2AB3A005187C4 /* NetBuilders+Authorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2E25C2AB3A005187C4 /* NetBuilders+Authorization.swift */; };
@@ -55,7 +55,7 @@
 		B034B01A25C30AAD005187C4 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3925C2AB3A005187C4 /* Request.swift */; };
 		B034B01B25C30AAD005187C4 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2C25C2AB3A005187C4 /* RequestBuilder.swift */; };
 		B034B01C25C30AAD005187C4 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3425C2AB3A005187C4 /* Response.swift */; };
-		B034B01D25C30AAD005187C4 /* Result+APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2B25C2AB3A005187C4 /* Result+APIClient.swift */; };
+		B034B01D25C30AAD005187C4 /* Result+InternalExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2B25C2AB3A005187C4 /* Result+InternalExtension.swift */; };
 		B034B01E25C30AAD005187C4 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3125C2AB3A005187C4 /* Retry.swift */; };
 		B034B01F25C30AAD005187C4 /* ServerTrustPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF2A25C2AB3A005187C4 /* ServerTrustPolicy.swift */; };
 		B034B02025C30AAD005187C4 /* ServiceAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3325C2AB3A005187C4 /* ServiceAgent.swift */; };
@@ -98,7 +98,7 @@
 		B034AF2825C2AB3A005187C4 /* MultipartFormData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipartFormData.swift; sourceTree = "<group>"; };
 		B034AF2925C2AB3A005187C4 /* ParameterEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterEncoding.swift; sourceTree = "<group>"; };
 		B034AF2A25C2AB3A005187C4 /* ServerTrustPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerTrustPolicy.swift; sourceTree = "<group>"; };
-		B034AF2B25C2AB3A005187C4 /* Result+APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Result+APIClient.swift"; sourceTree = "<group>"; };
+		B034AF2B25C2AB3A005187C4 /* Result+InternalExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Result+InternalExtension.swift"; sourceTree = "<group>"; };
 		B034AF2C25C2AB3A005187C4 /* RequestBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		B034AF2D25C2AB3A005187C4 /* NetBuilders+CacheControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NetBuilders+CacheControl.swift"; sourceTree = "<group>"; };
 		B034AF2E25C2AB3A005187C4 /* NetBuilders+Authorization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NetBuilders+Authorization.swift"; sourceTree = "<group>"; };
@@ -201,7 +201,7 @@
 				B034AF3925C2AB3A005187C4 /* Request.swift */,
 				B034AF2C25C2AB3A005187C4 /* RequestBuilder.swift */,
 				B034AF3425C2AB3A005187C4 /* Response.swift */,
-				B034AF2B25C2AB3A005187C4 /* Result+APIClient.swift */,
+				B034AF2B25C2AB3A005187C4 /* Result+InternalExtension.swift */,
 				B034AF3125C2AB3A005187C4 /* Retry.swift */,
 				B034AF2A25C2AB3A005187C4 /* ServerTrustPolicy.swift */,
 				B034AF3325C2AB3A005187C4 /* ServiceAgent.swift */,
@@ -465,7 +465,7 @@
 				B034AF4125C2AB3A005187C4 /* NetBuilders+Authorization.swift in Sources */,
 				B034AF4325C2AB3A005187C4 /* NetBuilders.swift in Sources */,
 				B034AF3F25C2AB3A005187C4 /* RequestBuilder.swift in Sources */,
-				B034AF3E25C2AB3A005187C4 /* Result+APIClient.swift in Sources */,
+				B034AF3E25C2AB3A005187C4 /* Result+InternalExtension.swift in Sources */,
 				B034AF4825C2AB3A005187C4 /* NetBuilders+ContentType.swift in Sources */,
 				B034AF4C25C2AB3A005187C4 /* Request.swift in Sources */,
 				B034AF5525C2AB9E005187C4 /* APIError.swift in Sources */,
@@ -512,7 +512,7 @@
 				B034B01A25C30AAD005187C4 /* Request.swift in Sources */,
 				B034B01B25C30AAD005187C4 /* RequestBuilder.swift in Sources */,
 				B034B01C25C30AAD005187C4 /* Response.swift in Sources */,
-				B034B01D25C30AAD005187C4 /* Result+APIClient.swift in Sources */,
+				B034B01D25C30AAD005187C4 /* Result+InternalExtension.swift in Sources */,
 				B034B01E25C30AAD005187C4 /* Retry.swift in Sources */,
 				B034B01F25C30AAD005187C4 /* ServerTrustPolicy.swift in Sources */,
 				B034B02025C30AAD005187C4 /* ServiceAgent.swift in Sources */,

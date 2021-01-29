@@ -1,6 +1,6 @@
 //
 //  APIRequest.swift
-//  Merlin-iOS
+//  NetService
 //
 //  Created by steven on 2020/12/31.
 //
@@ -16,15 +16,15 @@ public protocol NetServiceProtocol: RequestConvertible {
     
     var httpMethod: NetBuilders.Method { get }
     
-    var parameters: [String:Any] { get set }
-    
     var timeout: TimeInterval { get }
     
     var authorization: NetBuilders.Authorization { get }
-    
-    var headers: [String : String] { get set }
-    
+        
     var encoding: ParameterEncoding { get }
+    
+    func customHeaders() -> [String: String]
+    
+    func getParameters() -> [String: Any]
             
     func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder
 }
@@ -41,6 +41,14 @@ public extension NetServiceProtocol {
     
     var encoding: ParameterEncoding { URLEncoding.default }
     
+    func customHeaders() -> [String: String] {
+        return [:]
+    }
+    
+    func getParameters() -> [String: Any] {
+        return [:]
+    }
+    
     func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder {
         let httpBuilder = builder ?? RequestBuilder()
         return httpBuilder
@@ -48,8 +56,8 @@ public extension NetServiceProtocol {
 
     func asURLRequest(with httpbuilder: RequestBuilder) throws -> URLRequest {
         var builder = httpbuilder
-        if !headers.isEmpty {
-            builder.headers.merge(self.headers) { (_, new) -> String in
+        if !customHeaders().isEmpty {
+            builder.headers.merge(customHeaders()) { (_, new) -> String in
                 new
             }
         }
@@ -85,7 +93,7 @@ public extension NetServiceProtocol {
         }
         request.httpShouldHandleCookies = builder.handleCookies
         request.httpShouldUsePipelining = builder.usePipelining
-        request = try encoding.encode(request, parameters: self.parameters)
+        request = try encoding.encode(request, parameters: getParameters())
         return request
     }
     
