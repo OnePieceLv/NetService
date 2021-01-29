@@ -53,23 +53,25 @@ public class BaseAPIService: NSObject {
         throw APIError.customFailure(message: "Must be conformance APIRequestConvertible protocol")
     }
     
-    private func authenticate(user: String, password: String, persistence: URLCredential.Persistence = .forSession) -> Void {
-        let credential = URLCredential(user: user, password: password, persistence: persistence)
-        authenticate(using: credential)
-    }
-    
     private func authenticate(using credential: URLCredential) -> Void {
         self.credential = credential
     }
     
     fileprivate func prepareRequest() throws -> URLRequest {
         let api = try conformance()
-        builder = api.httpBuilderHelper(builder: RequestBuilder(urlString: api.urlString))
-        builder = middlewares.reduce(builder) { return $1.prepare($0) }
-        if case .basic(let user, let password) = builder.authorization {
-            authenticate(user: user, password: password)
+        var builderObj = RequestBuilder(urlString: api.urlString)
+        builderObj.headers.merge(api.customHeaders()) { (_, new) in new }
+        builderObj.httpMethod = api.httpMethod
+        builderObj.timeout = api.timeout
+        if let credential = api.credential {
+            authenticate(using: credential)
+        } else {
+            builderObj.authorization = api.authorization
         }
-        let request = try api.asURLRequest(with: builder)
+        builder = api.httpBuilderHelper(builder: builderObj)
+        builder = middlewares.reduce(builder) { return $1.prepare($0) }
+        
+        let request = try api.asURLRequest(with: builder, parameters: api.getParameters())
         return request
     }
     
@@ -202,7 +204,6 @@ extension BaseDataService {
         }
         do {
             self.urlRequest = try prepareRequest()
-            
         } catch {
             fatalError(error.localizedDescription)
         }

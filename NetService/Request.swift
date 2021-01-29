@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol RequestConvertible: class {
-    func asURLRequest(with httpbuilder: RequestBuilder) throws -> URLRequest
+    func asURLRequest(with httpbuilder: RequestBuilder, parameters: [String: Any]) throws -> URLRequest
 }
 
 public protocol NetServiceProtocol: RequestConvertible {
@@ -21,6 +21,8 @@ public protocol NetServiceProtocol: RequestConvertible {
     var authorization: NetBuilders.Authorization { get }
         
     var encoding: ParameterEncoding { get }
+    
+    var credential: URLCredential? { get }
     
     func customHeaders() -> [String: String]
     
@@ -41,6 +43,10 @@ public extension NetServiceProtocol {
     
     var encoding: ParameterEncoding { URLEncoding.default }
     
+    var credential: URLCredential? {
+        return nil
+    }
+    
     func customHeaders() -> [String: String] {
         return [:]
     }
@@ -54,23 +60,14 @@ public extension NetServiceProtocol {
         return httpBuilder
     }
 
-    func asURLRequest(with httpbuilder: RequestBuilder) throws -> URLRequest {
-        var builder = httpbuilder
-        if !customHeaders().isEmpty {
-            builder.headers.merge(customHeaders()) { (_, new) -> String in
-                new
-            }
-        }
+    func asURLRequest(with httpbuilder: RequestBuilder, parameters: [String: Any]) throws -> URLRequest {
+        let builder = httpbuilder
         guard let url = builder.url else {
             throw APIError.missingURL
         }
-        
-        builder.timeout = timeout
-        builder.authorization = authorization
-        builder.httpMethod = httpMethod
         var request = URLRequest(url: url,
                                  cachePolicy: URLRequest.CachePolicy(rawValue: builder.cache.rawValue) ?? .useProtocolCachePolicy,
-                                 timeoutInterval: timeout
+                                 timeoutInterval: builder.timeout
         )
         request.networkServiceType = URLRequest.NetworkServiceType(rawValue: builder.serviceType.rawValue) ?? .default
         request.allowsCellularAccess = builder.allowsCellularAccess
@@ -83,17 +80,17 @@ public extension NetServiceProtocol {
         }
         request.setValue(builder.contentType?.rawValue, forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentType)
         if let contentLength = builder.contentLength {
-            request.setValue("\(contentLength)", forHTTPHeaderField:NetBuilders.HTTPHeader.HeaderField.contentLength)
+            request.setValue("\(contentLength)", forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentLength)
         }
         request.setValue(builder.acceptEncoding?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.acceptEncoding)
         request.setValue(builder.contentEncoding?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentEncoding)
         request.setValue(builder.cacheControl?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.cacheControl)
-        if authorization != .none {
-            request.setValue(authorization.rawValue, forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.authorization)
+        if builder.authorization != .none {
+            request.setValue(builder.authorization.rawValue, forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.authorization)
         }
         request.httpShouldHandleCookies = builder.handleCookies
         request.httpShouldUsePipelining = builder.usePipelining
-        request = try encoding.encode(request, parameters: getParameters())
+        request = try encoding.encode(request, parameters: parameters)
         return request
     }
     
