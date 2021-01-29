@@ -150,26 +150,27 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
     /// `HTTPURLResponse`'s status code, headers, and body; the duration of the network and serialization actions; and
     /// the `Result` of serialization.
     public var debugDescription: String {
-        var result = ""
+        var result = "[Response]: \r\n"
         if let response = self.response {
-            result = "[Status Code]: \(response.statusCode) \n"
+            result += "[Status Code]: \(response.statusCode)".trimmingCharacters(in: .whitespacesAndNewlines).indentingNewlines() + "\r\n"
+            result += "\r\n"
         } else {
-            result = "[response] none \n"
+            result = "[response] none \r\n"
         }
         if let headers = self.response?.allHeaderFields {
-            result += "[Headers]: \(headers.reduce(""){ $0 + "\($1.key)\($1.value)" }) \n"
+            result += headers.reduce("[Headers]: ") { "\($0)" + "\($1.key): \($1.value)".trimmingCharacters(in: .whitespacesAndNewlines).indentingNewlines() + "\r\n" }
+            result += "\r\n"
         } else {
-            result += "[Headers]: none \n"
+            result += "[Headers]: none \r\n"
         }
         if let data = self.data {
-            result += "[Response]:\(String(decoding: data, as: UTF8.self).trimmingCharacters(in:.whitespacesAndNewlines).indentingNewlines())"
+            result += "[data]:\(String(decoding: data, as: UTF8.self).trimmingCharacters(in:.whitespacesAndNewlines).indentingNewlines()) \r\n"
         } else {
-            result += "[Response]: none \n"
+            result += "[data]: none \r\n"
         }
         return """
-                [Debug Response]:
-                    \(result)
-                    [Request]: \(DebugDescription.description(of: self.request))
+                \(result.indentingNewlines())
+                \(DebugDescription.description(of: self.request))
                """
     }
     
@@ -180,33 +181,26 @@ extension DataResponse: CustomStringConvertible, CustomDebugStringConvertible {
 
 private enum DebugDescription {
     static func description(of request: URLRequest) -> String {
-        let requestSummary = "\(request.httpMethod!) \(request)"
-        let requestHeadersDescription = DebugDescription.description(for: request.httpBody, headers: request.allHTTPHeaderFields)
-        let requestBodyDescription = DebugDescription.description(for: request.httpBody, headers: request.allHTTPHeaderFields)
+        let requestSummary = "\(request.httpMethod!) \(request)" + "\r\n"
+        
+        var requestHeadersDescription = ""
+        if let headers = request.allHTTPHeaderFields {
+            requestHeadersDescription = headers.reduce("[request headers]: ") { "\($0)" + "\($1.key):\($1.value)" + "\r\n"}
+            requestHeadersDescription += "\r\n"
+        }
+        
+        var requestBodyDescription = ""
+        if let data = request.httpBody {
+            requestBodyDescription = String(data: data, encoding: .utf8) ?? ""
+            requestBodyDescription = "\(requestBodyDescription.trimmingCharacters(in: .whitespacesAndNewlines).indentingNewlines())"
+            requestBodyDescription += "\r\n"
+        }
 
         return """
-        [Request]: \(requestSummary)
+        [Request]:
+            \(requestSummary)
             \(requestHeadersDescription.indentingNewlines())
             \(requestBodyDescription.indentingNewlines())
-        """
-    }
-
-    static func description(for data: Data?,
-                            headers: [String: String]?,
-                            allowingPrintableTypes printableTypes: [String] = ["json", "xml", "text"],
-                            maximumLength: Int = 100_000) -> String {
-        guard let data = data, !data.isEmpty else { return "[Body]: None" }
-
-        guard
-            data.count <= maximumLength,
-            printableTypes.compactMap({ headers?["Content-Type"]?.contains($0) }).contains(true)
-        else { return "[Body]: \(data.count) bytes" }
-
-        return """
-        [Body]:
-            \(String(decoding: data, as: UTF8.self)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .indentingNewlines())
         """
     }
 }

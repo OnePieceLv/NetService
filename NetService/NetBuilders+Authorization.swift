@@ -54,3 +54,16 @@ extension NetBuilders.Authorization: RawRepresentable {
     }
 
 }
+
+extension NetBuilders.Authorization: CustomStringConvertible, CustomDebugStringConvertible {
+    public var description: String {
+        return self.debugDescription
+    }
+    
+    public var debugDescription: String {
+        if !self.rawValue.isEmpty {
+            return "Authorization: \(self.rawValue)"
+        }
+        return "none"
+    }
+}

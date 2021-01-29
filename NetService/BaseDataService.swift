@@ -39,7 +39,7 @@ public class BaseAPIService: NSObject {
     
     private var _task: URLSessionTask?
     
-    private var builder: RequestBuilder = RequestBuilder()
+    fileprivate var builder: RequestBuilder = RequestBuilder()
     
     // MARK: - Retry
     var retryPolicy: RetryPolicyProtocol? = DefaultRetryPolicy()
@@ -143,6 +143,30 @@ extension BaseAPIService: Retryable {
     
     func resetRetry() {
         retryCount = 0
+    }
+}
+
+extension BaseAPIService {
+    public override var description: String {
+        return self.debugDescription
+    }
+    
+    public override var debugDescription: String {
+        var custom = "\r\n"
+        var credential = "none"
+        if let cre = self.credential {
+            credential = "user: \(String(describing: cre.user)), password: \(String(describing: cre.password)), haspassword: \(cre.hasPassword), certificates: \(cre.certificates)"
+        }
+        if let api = (self as? NetServiceProtocol) {
+            custom += "[Parameters: ] \(api.getParameters())" + "\r\n"
+            custom += "[Headers: ] \(self.builder.headers)" + "\r\n"
+            custom += "[Authorization: ] \(api.authorization.description)" + "\r\n"
+            custom += "[Method: ] \(api.httpMethod)" + "\r\n"
+            custom += "[URL: ] \(api.urlString)" + "\r\n"
+            custom += "[Credential: ] \(credential)" + "\r\n"
+            custom += "\r\n"
+        }
+        return (custom)
     }
 }
 
