@@ -111,10 +111,10 @@ public struct DownloadResponse {
     public let result: Result<URL, Error>
 
     /// Returns the associated value of the result if it is a success, `nil` otherwise.
-    public var success: URL? { return result.success }
+    public var value: URL? { return result.success }
 
     /// Returns the associated error value if the result if it is a failure, `nil` otherwise.
-    public var failure: Error? { return result.failure }
+    public var error: Error? { return result.failure }
     
     public init(
         response: HTTPURLResponse?,

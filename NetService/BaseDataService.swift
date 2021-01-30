@@ -322,7 +322,7 @@ public class BaseDownloadService: BaseAPIService {
     var response: DownloadResponse?
     
     var error: Error? {
-        return response?.failure
+        return response?.error
     }
     
     private var _resumeData: Data?
