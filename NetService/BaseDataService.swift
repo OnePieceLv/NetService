@@ -334,7 +334,6 @@ public class BaseDownloadService: BaseAPIService {
     
     override func cancel() {
         self.cancel(createResumeData: true)
-        self.removeRequest(task: self.task)
     }
 
     func cancel(createResumeData: Bool) {
@@ -346,6 +345,7 @@ public class BaseDownloadService: BaseAPIService {
         } else {
             self.downloadTask?.cancel()
         }
+        self.removeRequest(task: self.task)
     }
 }
 
