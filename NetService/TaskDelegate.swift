@@ -207,7 +207,7 @@ class TaskDelegate: NSObject {
         let completeTask: (URLSession, URLSessionTask, Error?) -> Void = { [weak self] session, task, error in
             guard let `self` = self else { return }
             self.error = error
-            if let err = self.error, self.destinationHandler != nil {
+            if let err = self.error {
                 self.resumeData = (err as NSError).userInfo[NSURLSessionDownloadTaskResumeData] as? Data
             }
             let taskResult = TaskResult(data: self.data, downloadFileURL: self.destinationFile, resumeData: self.resumeData, response: task.response as? HTTPURLResponse, error: error, task: task, metrics: self.metrics)
