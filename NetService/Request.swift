@@ -24,9 +24,9 @@ public protocol NetServiceProtocol: RequestConvertible {
     
     var credential: URLCredential? { get }
     
-    func customHeaders() -> [String: String]
+    func httpHeaders() -> [String: String]
     
-    func getParameters() -> [String: Any]
+    func httpParameters(parameters: [String: Any]) -> [String: Any]
             
     func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder
 }
@@ -47,12 +47,12 @@ public extension NetServiceProtocol {
         return nil
     }
     
-    func customHeaders() -> [String: String] {
+    func httpHeaders() -> [String: String] {
         return [:]
     }
     
-    func getParameters() -> [String: Any] {
-        return [:]
+    func httpParameters(parameters: [String: Any] = [:]) -> [String: Any] {
+        return parameters
     }
     
     func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder {

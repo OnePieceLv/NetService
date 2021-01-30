@@ -10,11 +10,6 @@ import XCTest
 
 class DownloadAPI: BaseDownloadService, NetServiceProtocol {
     
-    
-    var parameters: [String : Any] = [:]
-    
-    var headers: [String : String] = [:]
-    
     var urlString: String {
         let numberOfLines = 100
         let urlString = "https://httpbin.org/stream/\(numberOfLines)"

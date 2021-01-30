@@ -60,7 +60,7 @@ public class BaseAPIService: NSObject {
     fileprivate func prepareRequest() throws -> URLRequest {
         let api = try conformance()
         var builderObj = RequestBuilder(urlString: api.urlString)
-        builderObj.headers.merge(api.customHeaders()) { (_, new) in new }
+        builderObj.headers.merge(api.httpHeaders()) { (_, new) in new }
         builderObj.httpMethod = api.httpMethod
         builderObj.timeout = api.timeout
         if let credential = api.credential {
@@ -71,7 +71,7 @@ public class BaseAPIService: NSObject {
         builder = api.httpBuilderHelper(builder: builderObj)
         builder = middlewares.reduce(builder) { return $1.prepare($0) }
         
-        let request = try api.asURLRequest(with: builder, parameters: api.getParameters())
+        let request = try api.asURLRequest(with: builder, parameters: api.httpParameters())
         return request
     }
     
@@ -158,7 +158,7 @@ extension BaseAPIService {
             credential = "user: \(String(describing: cre.user)), password: \(String(describing: cre.password)), haspassword: \(cre.hasPassword), certificates: \(cre.certificates)"
         }
         if let api = (self as? NetServiceProtocol) {
-            custom += "[Parameters: ] \(api.getParameters())" + "\r\n"
+            custom += "[Parameters: ] \(api.httpParameters())" + "\r\n"
             custom += "[Headers: ] \(self.builder.headers)" + "\r\n"
             custom += "[Authorization: ] \(api.authorization.description)" + "\r\n"
             custom += "[Method: ] \(api.httpMethod)" + "\r\n"
