@@ -250,7 +250,7 @@ extension BaseDataService {
         self.resume(with: task)
     }
     
-    func sync<T: ObjectTransformProtocol>(service: Service = ServiceAgent.shared, transform: T) -> Self {
+    func sync(service: Service = ServiceAgent.shared) -> Self {
         do {
             self.urlRequest = try prepareRequest()
         } catch {
@@ -266,7 +266,7 @@ extension BaseDataService {
                 semaphore.signal()
                 self.retry(retart: { [weak self] in
                     guard let `self` = self else { return }
-                    _ = self.sync(service: service, transform: transform)
+                    _ = self.sync(service: service)
                 }, response: response, error: error)
             } else {
                 /// handle success
@@ -283,6 +283,15 @@ extension BaseDataService {
     func progress(progressClosure: @escaping ProgressClosure) -> Self {
         self.progressHandle = progressClosure
         return self
+    }
+}
+
+extension BaseDataService {
+    func transform<T: DataTransformProtocol>(with transform: T) throws -> T.TransformObject {
+        if let response = self.response {
+            return try transform.transform(response)
+        }
+        throw APIError.missingResponse
     }
 }
 
@@ -396,6 +405,15 @@ extension BaseDownloadService {
         self.resume(with: downloadTask)
     }
     
+}
+
+extension BaseDownloadService {
+    func transform<T: DownloadTransformProtocol>(with transform: T) throws -> T.TransformObject {
+        if let downloadResponse = self.response {
+            return try transform.transform(downloadResponse)
+        }
+        throw APIError.missingResponse
+    }
 }
 
 

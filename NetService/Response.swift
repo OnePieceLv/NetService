@@ -11,21 +11,25 @@ import Foundation
 /// A set of HTTP response status code that do not contain response data.
 private let emptyDataStatusCodes: Set<Int> = [204, 205]
 
-public protocol ObjectTransformProtocol {
+public protocol DataTransformProtocol {
     associatedtype TransformObject
-    func transform(_ data: Data) throws -> TransformObject
+    func transform(_ response: DataResponse) throws -> TransformObject
 }
 
-public struct DefaultJSONTransform: ObjectTransformProtocol {
+public protocol DownloadTransformProtocol {
+    associatedtype TransformObject
+    func transform(_ downloadResponse: DownloadResponse) throws -> TransformObject
+}
+
+public struct DefaultJSONTransform: DataTransformProtocol {
+    
     typealias TranformObject = Any
     
-    public func transform(_ data: Data) throws -> Any {
-        do {
-            let dict = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
-            return dict
-        } catch {
-            throw error
+    public func transform(_ response: DataResponse) throws -> Any {
+        if let string = response.responseString, let data = string.data(using: .utf8) {
+            return try JSONSerialization.jsonObject(with: data, options: .allowFragments)
         }
+        throw APIError.responseSerializationFailed(reason: APIError.ResponseSerializationFailureReason.inputDataNilOrZeroLength)
     }
 }
 
@@ -36,7 +40,7 @@ public struct DataResponse {
         
     public let response: HTTPURLResponse?
     
-    public let data: Data?
+    private let data: Data?
     
     public let metrics: URLSessionTaskMetrics?
     
@@ -50,6 +54,20 @@ public struct DataResponse {
     
     public var error: Error? { result.failure }
     
+    public var responseString: String? {
+        if let data = self.data {
+            return String(data: data, encoding: .utf8)
+        }
+        return nil
+    }
+    
+    public func responseJSON() throws -> [String: Any]? {
+        if let data = self.data {
+            return try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+        }
+        return nil
+    }
+    
     public init(request: URLRequest,
                 response: HTTPURLResponse?,
                 data: Data?,
@@ -61,18 +79,6 @@ public struct DataResponse {
         self.data = data
         self.result = result
         self.metrics = metrics
-    }
-    
-    public func transform<T: ObjectTransformProtocol>(with transform: T) throws -> T.TransformObject {
-        let res = result.tryMap({ (data) -> T.TransformObject in
-            return try transform.transform(data)
-        })
-        
-        if let object = res.success {
-            return object
-        }
-        
-        throw res.failure ?? APIError.customFailure(message: "transform error is missing")
     }
     
     public static func serializeResponseData(response: HTTPURLResponse?, data: Data?, error: Error?) -> Result<Data, Error> {

@@ -87,6 +87,7 @@ public enum APIError: Error {
     case invalidURL(url: String)
     
     case missingURL
+    case missingResponse
     
     case responseValidationFailed(reason: ResponseValidationFailureReason)
     /// Response serialization failed.
