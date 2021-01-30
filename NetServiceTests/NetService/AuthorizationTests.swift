@@ -73,7 +73,7 @@ class AuthorizationTests: BaseTestCase {
         XCTAssertNotNil(response?.response)
         print(response!)
         XCTAssertEqual(response?.response?.statusCode, 200)
-        XCTAssertNotNil(response?.data)
+        XCTAssertNotNil(response?.responseString)
         XCTAssertNil(response?.error)
     }
     
@@ -91,7 +91,7 @@ class AuthorizationTests: BaseTestCase {
         XCTAssertNotNil(response?.request)
         XCTAssertNotNil(response?.response)
         XCTAssertEqual(response?.response?.statusCode, 200)
-        XCTAssertNotNil(response?.data)
+        XCTAssertNotNil(response?.responseString)
         XCTAssertNil(response?.error)
         print(response!)
     }
@@ -110,7 +110,7 @@ class AuthorizationTests: BaseTestCase {
         XCTAssertNotNil(response?.response)
         XCTAssertNil(response?.error)
         XCTAssertEqual(response?.statusCode, 401)
-        XCTAssertNotNil(response?.data)
+        XCTAssertNotNil(response?.responseString)
         print(response!)
     }
     
@@ -127,7 +127,7 @@ class AuthorizationTests: BaseTestCase {
         XCTAssertNotNil(response?.request)
         XCTAssertNotNil(response?.response)
         XCTAssertEqual(response?.statusCode, 200)
-        XCTAssertNotNil(response?.data)
+        XCTAssertNotNil(response?.responseString)
         XCTAssertNil(response?.error)
         print(response!)
     }
@@ -144,7 +144,7 @@ class AuthorizationTests: BaseTestCase {
         XCTAssertNotNil(response?.request)
         XCTAssertNotNil(response?.response)
         XCTAssertEqual(response?.response?.statusCode, 401)
-        XCTAssertNotNil(response?.data)
+        XCTAssertNotNil(response?.responseString)
         XCTAssertNil(response?.error)
     }
 

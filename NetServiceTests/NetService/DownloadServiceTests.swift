@@ -61,12 +61,13 @@ class DownloadServiceTests: BaseTestCase {
         
         waitForExpectations(timeout: timeout, handler: nil)
         // Then
-        print(response?.downloadFileURL)
         XCTAssertNotNil(response?.response)
         XCTAssertNotNil(response?.downloadFileURL)
         XCTAssertNil(response?.resumeData)
         XCTAssertNil(response?.failure)
-        
+        if let downloadFileURL = response?.downloadFileURL {
+            print(downloadFileURL)
+        }
     }
 
 }

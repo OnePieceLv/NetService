@@ -39,7 +39,9 @@ class UploadTests: BaseTestCase {
             print(progress.completedUnitCount)
         } completion: { (request) in
             res = request.response
-            print(String(data: res!.data!, encoding: .utf8)!)
+            if let responseString = res?.responseString {
+                print(responseString)
+            }
             expection.fulfill()
         }
         

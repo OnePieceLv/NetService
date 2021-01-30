@@ -27,26 +27,30 @@ class BaseDataServiceTests: BaseTestCase {
         let exception = self.expectation(description: "\(api.urlString)")
         api.async { (request) in
             response = request.response
-            print(String(data: request.response!.data!, encoding: .utf8))
             exception.fulfill()
         }
         waitForExpectations(timeout: timeout, handler: nil)
         XCTAssertNotNil(response)
-        print(response?.error)
+        if let response = response, let responseString = response.responseString {
+            print(responseString)
+        }
         XCTAssertNotNil(response?.result.success)
         XCTAssertNotNil(response?.response)
-        XCTAssertNotNil(response?.data)
+        XCTAssertNotNil(response?.responseString)
 //        XCTAssertTrue(response!.result.isFailure)
     }
     
     func testSync() throws {
         let api = TestAPI()
-        let res = api.sync(transform: DefaultJSONTransform())
+        let res = api.sync()
 
         XCTAssertNotNil(res.response)
-        print("-------testSync-----")
-        print(res.response)
-        print("-------testSync-----")
+        XCTAssertEqual(res.response?.statusCode, 200)
+        XCTAssertNotNil(res.response?.responseString, "response string must be not nil")
+        if let response = res.response, let responseString = response.responseString {
+            print(responseString)
+        }
+        
     }
     
     func testPublished() throws {
