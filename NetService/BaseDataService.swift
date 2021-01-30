@@ -102,14 +102,14 @@ public class BaseAPIService: NSObject {
         task.resume()
     }
     
-    fileprivate func suspend() -> Void {
+    func suspend() -> Void {
         guard let task = self.task else {
             return
         }
         task.suspend()
     }
     
-    fileprivate func cancel() -> Void {
+    func cancel() -> Void {
         guard let task = self.task else {
             return
         }
@@ -332,12 +332,12 @@ public class BaseDownloadService: BaseAPIService {
         return self
     }
     
-    override fileprivate func cancel() {
+    override func cancel() {
         self.cancel(createResumeData: true)
         self.removeRequest(task: self.task)
     }
 
-    private func cancel(createResumeData: Bool) {
+    func cancel(createResumeData: Bool) {
         if createResumeData {
             self.downloadTask?.cancel { [weak self] (data) in
                 guard let `self` = self else { return }
