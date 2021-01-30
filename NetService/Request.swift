@@ -26,7 +26,7 @@ public protocol NetServiceProtocol: RequestConvertible {
     
     func httpHeaders() -> [String: String]
     
-    func httpParameters(parameters: [String: Any]) -> [String: Any]
+    func httpParameters() -> [String: Any]
             
     func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder
 }
@@ -51,8 +51,8 @@ public extension NetServiceProtocol {
         return [:]
     }
     
-    func httpParameters(parameters: [String: Any] = [:]) -> [String: Any] {
-        return parameters
+    func httpParameters() -> [String: Any] {
+        return [:]
     }
     
     func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder {
