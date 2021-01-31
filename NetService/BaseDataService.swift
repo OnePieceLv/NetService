@@ -8,7 +8,7 @@
 import Foundation
 
 
-public class BaseAPIService: NSObject {
+open class BaseAPIService: NSObject {
     
     var state: NetBuilders.State {
         return task?.apiState ?? .waitingForConnectivity
@@ -170,7 +170,7 @@ extension BaseAPIService {
     }
 }
 
-public class BaseDataService: BaseAPIService {
+open class BaseDataService: BaseAPIService {
     
     var error: Error? {
         return response?.error
@@ -296,7 +296,7 @@ extension BaseDataService {
 }
 
 
-public class BaseDownloadService: BaseAPIService {
+open class BaseDownloadService: BaseAPIService {
     
     var resumeData: Data? {
         get {
@@ -407,7 +407,7 @@ extension BaseDownloadService {
     
 }
 
-extension BaseDownloadService {
+public extension BaseDownloadService {
     func transform<T: DownloadTransformProtocol>(with transform: T) throws -> T.TransformObject {
         if let downloadResponse = self.response {
             return try transform.transform(downloadResponse)
@@ -417,20 +417,20 @@ extension BaseDownloadService {
 }
 
 
-public class BaseUploadService: BaseAPIService {
+open class BaseUploadService: BaseAPIService {
     
-    static let multipartFormDataEncodingMemoryThreshold: UInt64 = 10_000_000
+    public static let multipartFormDataEncodingMemoryThreshold: UInt64 = 10_000_000
     
     var uploadProgress: ((Progress) -> Void)?
     
-    var response: DataResponse?
+    public var response: DataResponse?
     
     override fileprivate func clear() {
         self.uploadProgress = nil
         super.clear()
     }
     
-    private func build(formdata: MultipartFormData, encodingMemoryThreshold: UInt64, isInBackgroundSession: Bool) throws -> (Uploadable, URLRequest?) {
+    func build(formdata: MultipartFormData, encodingMemoryThreshold: UInt64, isInBackgroundSession: Bool) throws -> (Uploadable, URLRequest?) {
         var request = try self.prepareRequest()
         request.setValue(formdata.contentType, forHTTPHeaderField: "Content-Type")
         
@@ -469,7 +469,7 @@ public class BaseUploadService: BaseAPIService {
     }
 }
 
-extension BaseUploadService {
+public extension BaseUploadService {
     
     func upload(with data: Data,
                 progress closure: ((Progress) -> Void)?,

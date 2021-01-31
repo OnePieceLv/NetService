@@ -44,7 +44,7 @@ public struct DataResponse {
     
     public let metrics: URLSessionTaskMetrics?
     
-    var statusCode: Int {
+    public var statusCode: Int {
         return response?.statusCode ?? -1
     }
     
@@ -107,6 +107,10 @@ public struct DownloadResponse {
     public let downloadFileURL: URL?
 
     public let resumeData: Data?
+    
+    public var statusCode: Int {
+        return response?.statusCode ?? -1
+    }
 
     public let result: Result<URL, Error>
 
