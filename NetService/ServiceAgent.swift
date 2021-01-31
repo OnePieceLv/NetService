@@ -13,6 +13,8 @@ public protocol Service: AnyObject {
     
     static var shared: Service { get }
     
+    var isInBackgroundSession: Bool { get }
+    
     subscript(_ task: URLSessionTask) -> BaseAPIService? { get set }
     
     func data(with request: URLRequest,
@@ -48,8 +50,6 @@ public final class ServiceAgent: NSObject {
     
     let serviceQueue: DispatchQueue = DispatchQueue(label: "org.netservice.session-manager." + UUID().uuidString)
     
-    let isInBackgroundSession: Bool
-    
     private override init() {
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = NetBuilders.HTTPHeader.defaultFields
@@ -57,7 +57,6 @@ public final class ServiceAgent: NSObject {
             configuration.waitsForConnectivity = true
         }
         configuration.allowsCellularAccess = true
-        isInBackgroundSession = (configuration.identifier != nil)
         manager = URLSessionManager(configuration:configuration, queue: serviceQueue)
         super.init()
     }
@@ -70,7 +69,6 @@ public final class ServiceAgent: NSObject {
         }
         configuration.allowsCellularAccess = true
         configuration = configurate?(configuration) ?? configuration
-        isInBackgroundSession = (configuration.identifier != nil)
         manager = URLSessionManager(configuration: configuration, queue: serviceQueue)
         super.init()
     }
@@ -78,6 +76,10 @@ public final class ServiceAgent: NSObject {
 
 
 extension ServiceAgent: Service {
+    
+    public var isInBackgroundSession: Bool {
+        return manager.isInBackgroundSession
+    }
     
     public static let shared: Service = {
         let client = ServiceAgent { (configuration) -> URLSessionConfiguration in

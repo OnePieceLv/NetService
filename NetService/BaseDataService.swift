@@ -516,6 +516,7 @@ public extension BaseUploadService {
     }
     
     func upload(multipartformdata: @escaping (MultipartFormData) -> Void,
+                isInMemoryThreshold: UInt64 = BaseUploadService.multipartFormDataEncodingMemoryThreshold,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
                 completion: @escaping (_ request: BaseUploadService) -> Void
@@ -524,8 +525,8 @@ public extension BaseUploadService {
         multipartformdata(formdata)
         do {
             let (uploadable, _) = try build(formdata: formdata,
-                               encodingMemoryThreshold: BaseUploadService.multipartFormDataEncodingMemoryThreshold,
-                               isInBackgroundSession: (service as! ServiceAgent).isInBackgroundSession)
+                               encodingMemoryThreshold: isInMemoryThreshold,
+                               isInBackgroundSession: service.isInBackgroundSession)
             self.upload(with: uploadable, progress: closure, completion: completion)
         } catch {
             fatalError(error.localizedDescription)
