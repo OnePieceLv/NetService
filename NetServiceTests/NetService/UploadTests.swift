@@ -96,6 +96,7 @@ class UploadTests: BaseTestCase {
         }
         
         waitForExpectations(timeout: timeout, handler: nil)
+        XCTAssertEqual(response?.statusCode, 200)
         XCTAssertNotNil(response?.response)
         XCTAssertNotNil(response?.responseString)
         XCTAssertNil(response?.error)
@@ -114,6 +115,54 @@ class UploadTests: BaseTestCase {
         }
 
 
+    }
+    
+    func testUploadRequestFromInputStreamWithProgress() -> Void {
+        let urlString = "https://httpbin.org/post"
+        let data: Data = {
+            var text = ""
+            for _ in 1...3_000 {
+                text += "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+            }
+
+            return text.data(using: .utf8, allowLossyConversion: false)!
+        }()
+        
+        let expectation = self.expectation(description: "Bytes upload progress should be reported: \(urlString)")
+        
+        var uploadProgressValues: [Double] = []
+        
+        var response: DataResponse?
+        
+        let inputStream = InputStream(data: data)
+        UploadAPI(with: urlString).upload(stream: inputStream, contentLength: UInt64(data.count)) { (progress) in
+            uploadProgressValues.append(progress.fractionCompleted)
+        } completion: { (request) in
+            response = request.response
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: timeout, handler: nil)
+        XCTAssertEqual(response?.statusCode, 200)
+        XCTAssertNotNil(response?.response)
+        XCTAssertNil(response?.error)
+        XCTAssertGreaterThan(uploadProgressValues.count, 0)
+        
+        var previousUploadProgress: Double = uploadProgressValues.first ?? 0.0
+        
+        for progress in uploadProgressValues {
+            XCTAssertGreaterThanOrEqual(progress, previousUploadProgress)
+            previousUploadProgress = progress
+        }
+        
+        print(uploadProgressValues)
+        if let lastProgressValue = uploadProgressValues.last {
+            XCTAssertEqual(lastProgressValue, 1.0)
+        } else {
+            XCTFail("last item in uploadProgressValues should not be nil")
+        }
+
+        
     }
 
     func testPerformanceExample() throws {
