@@ -241,9 +241,6 @@ class TaskDelegate: NSObject {
     func taskNeedBodyStream(_ session: URLSession, task: URLSessionTask, needNewBodyStream completionHandler: @escaping (InputStream?) -> Void) {
         var inputStream: InputStream?
         inputStream = self.taskNeedNewBodyStream?(session, task)
-        if let stream = task.originalRequest?.httpBodyStream {
-            inputStream = stream
-        }
         completionHandler(inputStream)
         self.taskNeedNewBodyStream = nil
     }

@@ -502,12 +502,15 @@ public extension BaseUploadService {
     }
     
     func upload(stream: InputStream,
+                contentLength: UInt64,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
                 completion: @escaping (_ request: BaseUploadService) -> Void
     ) -> Void {
         do {
-            let request = try prepareRequest()
+            var request = try prepareRequest()
+            let header: NetBuilders.HTTPHeader = NetBuilders.HTTPHeader.contentLength(contentLength)
+            request.setValue(header.value, forHTTPHeaderField: header.name)
             let upload: Uploadable = .stream(stream, request)
             self.upload(with: upload, progress: closure, completion: completion)
         } catch {
