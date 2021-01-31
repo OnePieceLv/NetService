@@ -202,8 +202,6 @@ class DownloadServiceTests: BaseTestCase {
     func testDownloadRequestMatchesResumeDataWhenisCancelled() -> Void {
         let urlString = "https://upload.wikimedia.org/wikipedia/commons/6/69/NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg"
         
-        var cancelled = false
-
         let expectation = self.expectation(description: "Download should be cancelled")
         
         var response: DownloadResponse?
@@ -212,7 +210,6 @@ class DownloadServiceTests: BaseTestCase {
         downloadapi.download { (progress) in
             if progress.fractionCompleted > 0.1 {
                 downloadapi.cancel()
-                cancelled = true
             }
         } completion: { (downloadRequest) in
             response = downloadRequest.response
