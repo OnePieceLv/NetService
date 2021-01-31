@@ -471,7 +471,7 @@ open class BaseUploadService: BaseAPIService {
 
 public extension BaseUploadService {
     
-    func upload(with data: Data,
+    func upload(data: Data,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
                 completion: @escaping (_ request: BaseUploadService) -> Void
@@ -487,7 +487,7 @@ public extension BaseUploadService {
         
     }
     
-    func upload(with file: URL,
+    func upload(file: URL,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
                 completion: @escaping (_ request: BaseUploadService) -> Void
@@ -501,7 +501,7 @@ public extension BaseUploadService {
         }
     }
     
-    func upload(with stream: InputStream,
+    func upload(stream: InputStream,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
                 completion: @escaping (_ request: BaseUploadService) -> Void
