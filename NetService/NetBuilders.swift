@@ -179,6 +179,18 @@ extension NetBuilders.HTTPHeader {
     public static func contentType(_ value: String) -> NetBuilders.HTTPHeader {
         NetBuilders.HTTPHeader(name: HeaderField.contentType, value: value)
     }
+    
+    /// Returns a `Content-Length` header.
+    ///
+    /// `ParameterEncoding`s set the `Content-Length` of the request, so it may not be necessary to manually
+    /// set this value.
+    ///
+    /// - Parameter value: The `Content-Length` value.
+    ///
+    /// - Returns:         The header.
+    public static func contentLength(_ value: UInt64) -> NetBuilders.HTTPHeader {
+        NetBuilders.HTTPHeader(name: HeaderField.contentLength, value: "\(value)")
+    }
 
     /// Returns a `User-Agent` header.
     ///
