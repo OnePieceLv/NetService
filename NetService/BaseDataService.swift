@@ -444,11 +444,20 @@ public class BaseUploadService: BaseAPIService {
             let fileName = UUID().uuidString
             let fileURL = directoryURL.appendingPathComponent(fileName)
 
-            // Create directory inside serial queue to ensure two threads don't do this in parallel
-            try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
 
             do {
+                // Create directory inside serial queue to ensure two threads don't do this in parallel
+                var isDirectory: ObjCBool = true
+                if FileManager.default.fileExists(atPath: directoryURL.path, isDirectory: &isDirectory) {
+                    try FileManager.default.removeItem(at: directoryURL)
+                }
+                try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+
                 try formdata.writeEncodedData(to: fileURL)
+                
+                if !FileManager.default.fileExists(atPath: fileURL.path) {
+                    throw APIError.multipartEncodingFailed(reason: APIError.MultipartEncodingFailureReason.bodyPartFileNotReachable(at: fileURL))
+                }
             } catch {
                 try? FileManager.default.removeItem(at: fileURL)
                 throw error

@@ -207,9 +207,6 @@ public extension MultipartFormData {
             throw bodyPartError
         }
         
-        bodyParts.first?.hasInitialBoundary = true
-        bodyParts.last?.hasFinalBoundary = true
-        
         if FileManager.default.fileExists(atPath: fileURL.path) {
             throw APIError.multipartEncodingFailed(reason: .outputStreamFileAlreadyExists(at: fileURL))
         } else if !fileURL.isFileURL {
@@ -220,6 +217,13 @@ public extension MultipartFormData {
             throw APIError.multipartEncodingFailed(reason: .outputStreamCreationFailed(for: fileURL))
         }
         
+        bodyParts.first?.hasInitialBoundary = true
+        bodyParts.last?.hasFinalBoundary = true
+        
+        outputStream.open()
+        defer {
+            outputStream.close()
+        }
         for bodyPart in bodyParts {
             try write(bodyPart, to: outputStream)
         }
