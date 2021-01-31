@@ -27,6 +27,50 @@ final class UploadAPI: BaseUploadService, NetServiceProtocol {
     
 }
 
+class DataAPI: BaseDataService, NetServiceProtocol {
+    var parameters: [String : Any] = [:]
+    
+    var headers: [String : String] = [:]
+    
+    var urlString: String {
+        return "https://httpbin.org/get"
+        
+    }
+}
+
+class DownloadAPI: BaseDownloadService, NetServiceProtocol {
+    
+    var urlString: String {
+        return _urlString
+    }
+    
+    func httpParameters() -> [String : Any] {
+        return _parameters
+    }
+    
+    func httpHeaders() -> [String : String] {
+        return _headers
+    }
+        
+    private var _urlString = ""
+    
+    private var _parameters: [String: Any] = [:]
+    
+    private var _headers: [String: String] = [:]
+    
+    init(with url: String, parameters: [String: Any] = [:]) {
+        _urlString = url
+        _parameters = parameters
+    }
+    
+    init(with url: String, headers: [String: String]) {
+        _urlString = url
+        _headers = headers
+    }
+    
+    
+}
+
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
@@ -50,7 +94,7 @@ class ViewController: UIViewController {
             return values.joined(separator: " ").data(using: .utf8, allowLossyConversion: false)!
         }()
         
-        var fromDisk = true
+        let fromDisk = true
         
         var uploadProgressValues: [Double] = []
         UploadAPI(with: urlString).upload(multipartformdata: { (formdata) in
@@ -62,12 +106,34 @@ class ViewController: UIViewController {
             uploadProgressValues.append(progress.fractionCompleted)
         }) { (request) in
             let response = request.response
-            print(response?.statusCode)
+            print(response?.statusCode ?? -1)
             print(uploadProgressValues)
         }
 
+        let api: DataAPI = DataAPI()
+        api.async { (request) in
+            print(request.response?.responseString)
+        }
+        
+        
+        let res = api.sync()
+        res.middlewares = []
+        print(res.response?.responseString)
+        
+        let randomBytes = 4 * 1024 * 1024
+        let downloadURLStr = "https://httpbin.org/bytes/\(randomBytes)"
+        var progressValues: [Double] = []
+
+        let download = DownloadAPI(with: downloadURLStr)
+        download.download { (progress) in
+            progressValues.append(progress.fractionCompleted)
+        } completion: { (downloadrequest) in
+            let response = download.response
+            print(response?.downloadFileURL)
+            print(progressValues)
+        }
+
     }
-
-
+    
 }
 

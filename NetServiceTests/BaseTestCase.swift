@@ -11,16 +11,7 @@ import XCTest
 class BaseTestCase: XCTestCase {
     let timeout: TimeInterval = 10
     
-    final class TestAPI: BaseDataService, NetServiceProtocol {
-        var parameters: [String : Any] = [:]
-        
-        var headers: [String : String] = [:]
-        
-        var urlString: String {
-            return "https://httpbin.org/get"
-            
-        }
-    }
+    
     override func setUp() {
             super.setUp()
     }

@@ -8,6 +8,17 @@
 import XCTest
 @testable import NetService
 
+final class TestAPI: BaseDataService, NetServiceProtocol {
+    var parameters: [String : Any] = [:]
+    
+    var headers: [String : String] = [:]
+    
+    var urlString: String {
+        return "https://httpbin.org/get"
+        
+    }
+}
+
 class BaseDataServiceTests: BaseTestCase {
     
 
