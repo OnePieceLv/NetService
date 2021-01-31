@@ -130,7 +130,7 @@ class TaskDelegate: NSObject {
     
     
     class func suggestDestinationFile(
-        for searchDirectory: FileManager.SearchPathDirectory = .downloadsDirectory,
+        for searchDirectory: FileManager.SearchPathDirectory = .documentDirectory,
         in userDomainMask: FileManager.SearchPathDomainMask = .userDomainMask,
         response: URLResponse
     ) -> URL? {
