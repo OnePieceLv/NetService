@@ -80,7 +80,7 @@ class DownloadServiceTests: BaseTestCase {
         var response: DownloadResponse?
         
         DownloadAPI().download(with: urlString).download(progress: { (progress) in
-            print(progress.completedUnitCount)
+            print(progress.fractionCompleted)
         }, to: destination) { (request) in
             response = request.response
             expectation.fulfill()
@@ -89,6 +89,7 @@ class DownloadServiceTests: BaseTestCase {
         waitForExpectations(timeout: timeout, handler: nil)
         // Then
         XCTAssertNotNil(response?.response)
+        XCTAssertEqual(response?.statusCode, 200)
         XCTAssertNotNil(response?.downloadFileURL)
         XCTAssertNil(response?.resumeData)
         XCTAssertNil(response?.error)
@@ -113,6 +114,7 @@ class DownloadServiceTests: BaseTestCase {
         waitForExpectations(timeout: timeout, handler: nil)
 
         // Then
+        XCTAssertEqual(response?.statusCode, 200)
         XCTAssertNotNil(response?.response)
         XCTAssertNotNil(response?.downloadFileURL)
         XCTAssertNil(response?.resumeData)
@@ -144,6 +146,7 @@ class DownloadServiceTests: BaseTestCase {
         waitForExpectations(timeout: timeout, handler: nil)
         
         XCTAssertNotNil(response?.response)
+        XCTAssertEqual(response?.statusCode, 200)
         XCTAssertNotNil(response?.downloadFileURL)
         XCTAssertNil(response?.resumeData)
         XCTAssertNil(response?.error)
@@ -183,6 +186,7 @@ class DownloadServiceTests: BaseTestCase {
         
         // Then
         XCTAssertNotNil(response?.response)
+        XCTAssertEqual(response?.statusCode, 200)
         XCTAssertNotNil(response?.downloadFileURL)
         XCTAssertNil(response?.resumeData)
         XCTAssertNil(response?.error)
@@ -218,6 +222,7 @@ class DownloadServiceTests: BaseTestCase {
         
         waitForExpectations(timeout: timeout, handler: nil)
         XCTAssertNotNil(response?.response)
+        XCTAssertEqual(response?.statusCode, 200)
         XCTAssertNil(response?.downloadFileURL)
         XCTAssertNotNil(response?.error)
 
@@ -273,11 +278,13 @@ class DownloadServiceTests: BaseTestCase {
         
         // Then
         XCTAssertNotNil(response1?.response)
+        XCTAssertEqual(response1?.statusCode, 200)
         XCTAssertNil(response1?.downloadFileURL)
         XCTAssertEqual(response1?.result.isFailure, true)
         XCTAssertNotNil(response1?.error)
 
         XCTAssertNotNil(response2?.response)
+        XCTAssertEqual(response2?.statusCode, 200)
         XCTAssertNotNil(response2?.downloadFileURL)
         XCTAssertEqual(response2?.result.isSuccess, true)
         XCTAssertNil(response2?.error)
@@ -313,6 +320,7 @@ class DownloadServiceTests: BaseTestCase {
         waitForExpectations(timeout: timeout, handler: nil)
         // Then
         XCTAssertNotNil(response?.response)
+        XCTAssertEqual(response?.statusCode, 200)
         XCTAssertNil(response?.downloadFileURL)
         XCTAssertNotNil(response?.error)
 
