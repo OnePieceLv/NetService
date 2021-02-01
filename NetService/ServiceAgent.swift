@@ -61,7 +61,7 @@ public final class ServiceAgent: NSObject {
         super.init()
     }
     
-    init(configurate: ((_ configuration: URLSessionConfiguration) -> URLSessionConfiguration)? = nil) {
+    public init(configurate: ((_ configuration: URLSessionConfiguration) -> URLSessionConfiguration)? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil) {
         var configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = NetBuilders.HTTPHeader.defaultFields
         if #available(iOS 11.0, *) {
@@ -69,7 +69,11 @@ public final class ServiceAgent: NSObject {
         }
         configuration.allowsCellularAccess = true
         configuration = configurate?(configuration) ?? configuration
-        manager = URLSessionManager(configuration: configuration, queue: serviceQueue)
+        manager = URLSessionManager(configuration: configuration,
+                                    delegate: SessionDelegate(),
+                                    queue: serviceQueue,
+                                    serverTrustPolicyManager: serverTrustPolicyManager
+        )
         super.init()
     }
 }
