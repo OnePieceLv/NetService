@@ -28,16 +28,14 @@ class DownloadAPI: BaseDownloadService, NetServiceProtocol {
     
     private var _headers: [String: String] = [:]
     
-    func download(with url: String, parameters: [String: Any] = [:]) -> Self {
+    init(with url: String, parameters: [String: Any] = [:]) {
         _urlString = url
         _parameters = parameters
-        return self
     }
     
-    func download(with url: String, headers: [String: String]) -> Self {
+    init(with url: String, headers: [String: String]) {
         _urlString = url
         _headers = headers
-        return self
     }
     
     
@@ -79,7 +77,7 @@ class DownloadServiceTests: BaseTestCase {
         let expectation = self.expectation(description: "Download API Should download data to file")
         var response: DownloadResponse?
         
-        DownloadAPI().download(with: urlString).download(progress: { (progress) in
+        DownloadAPI(with: urlString).download(progress: { (progress) in
             print(progress.fractionCompleted)
         }, to: destination) { (request) in
             response = request.response
@@ -104,7 +102,7 @@ class DownloadServiceTests: BaseTestCase {
         
         let expectation = self.expectation(description: "Download request should download data to file")
         var response: DownloadResponse?
-        DownloadAPI().download(with: urlString, parameters: parameters).download { (progress) in
+        DownloadAPI(with: urlString, parameters: parameters).download { (progress) in
             print(progress.completedUnitCount)
         } completion: { (request) in
             response = request.response
@@ -135,7 +133,7 @@ class DownloadServiceTests: BaseTestCase {
         var progressValues: [Double] = []
         var response: DownloadResponse?
         
-        DownloadAPI().download(with: urlString).download { (progress) in
+        DownloadAPI(with: urlString).download { (progress) in
             progressValues.append(progress.fractionCompleted)
             print(progressValues)
         } completion: { (request) in
@@ -175,7 +173,7 @@ class DownloadServiceTests: BaseTestCase {
         
         var response: DownloadResponse?
         
-        DownloadAPI().download(with: urlString, headers: headers).download(progress: { (progress) in
+        DownloadAPI(with: urlString, headers: headers).download(progress: { (progress) in
             print(progress.completedUnitCount)
         }, to: destination) { (downloadRequest) in
             response = downloadRequest.response
@@ -210,7 +208,7 @@ class DownloadServiceTests: BaseTestCase {
         
         var response: DownloadResponse?
         
-        let downloadapi = DownloadAPI().download(with: urlString)
+        let downloadapi = DownloadAPI(with: urlString)
         downloadapi.download { (progress) in
             if progress.fractionCompleted > 0.1 {
                 downloadapi.cancel()
@@ -233,22 +231,28 @@ class DownloadServiceTests: BaseTestCase {
 
     }
     
-    func testDownloadRequestCanBeResumedWithResumeData() -> Void {
+    // Disabled, this source not supports resume ranges.
+    // https://developer.apple.com/documentation/foundation/urlsessiondownloadtask/1411634-cancel
+    func _testDownloadRequestCanBeResumedWithResumeData() -> Void {
         let urlString = "https://upload.wikimedia.org/wikipedia/commons/6/69/NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg"
 
+        let fileURL = randomCachesFileURL
+        let destination: DestinationClosure = {_, _ in fileURL }
+
+        
         let expectation1 = self.expectation(description: "Download should be cancelled")
         var cancelled = false
         
         var response1: DownloadResponse?
-        let downloadAPI = DownloadAPI().download(with: urlString)
-        downloadAPI.download { (progress) in
+        let downloadAPI = DownloadAPI(with: urlString)
+        downloadAPI.download(progress: { (progress) in
             guard !cancelled else { return }
             if progress.fractionCompleted > 0.4 {
                 print(progress.fractionCompleted)
                 downloadAPI.cancel()
                 cancelled = true
             }
-        } completion: { (request) in
+        }, to: destination) { (request) in
             response1 = request.response
             expectation1.fulfill()
         }
@@ -260,16 +264,23 @@ class DownloadServiceTests: BaseTestCase {
             return
         }
         
+        do {
+            try resumeData.write(to: fileURL)
+        } catch {
+            print(error)
+            XCTAssertNil(error, "error should be nil")
+        }
+        
         let expectation2 = self.expectation(description: "Download should complete")
 
         var progressValues: [Double] = []
         
         var response2: DownloadResponse?
-        let downloadAPI2 = DownloadAPI()
+        let downloadAPI2 = DownloadAPI(with: urlString)
         print(resumeData)
-        downloadAPI2.download(resumingWith: resumeData) { (progress) in
+        downloadAPI2.download(resumingWith: resumeData, to: destination, progress: { (progress) in
             progressValues.append(progress.fractionCompleted)
-        } completion: { (request) in
+        }) { (request) in
             response2 = request.response
             expectation2.fulfill()
         }
@@ -289,7 +300,7 @@ class DownloadServiceTests: BaseTestCase {
         XCTAssertEqual(response2?.result.isSuccess, true)
         XCTAssertNil(response2?.error)
         print(progressValues)
-//        progressValues.forEach { XCTAssertGreaterThanOrEqual($0, 0.4) }
+        progressValues.forEach { XCTAssertGreaterThanOrEqual($0, 0.4) }
 
     }
     
@@ -302,7 +313,7 @@ class DownloadServiceTests: BaseTestCase {
         
         var response: DownloadResponse?
         
-        let downloadAPI = DownloadAPI().download(with: urlString)
+        let downloadAPI = DownloadAPI(with: urlString)
         
         downloadAPI.download { (progress) in
             guard !cancelled else { return }
