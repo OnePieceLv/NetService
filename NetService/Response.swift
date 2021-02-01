@@ -83,7 +83,7 @@ public struct DataResponse {
     
     public static func serializeResponseData(response: HTTPURLResponse?, data: Data?, error: Error?) -> Result<Data, Error> {
         if let err = error {
-            return .failure(err.asAPIError(or: APIError.undefinedFailed(error: err)))
+            return .failure(err)
         }
 
         if let response = response, emptyDataStatusCodes.contains(response.statusCode) {
