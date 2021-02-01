@@ -231,10 +231,10 @@ class DownloadServiceTests: BaseTestCase {
 
     }
     
-    // Disabled, this source not supports resume ranges.
     // https://developer.apple.com/documentation/foundation/urlsessiondownloadtask/1411634-cancel
-    func _testDownloadRequestCanBeResumedWithResumeData() -> Void {
-        let urlString = "https://upload.wikimedia.org/wikipedia/commons/6/69/NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg"
+    func testDownloadRequestCanBeResumedWithResumeData() -> Void {
+//        let urlString = "https://upload.wikimedia.org/wikipedia/commons/6/69/NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg"
+        let urlString = "https://cloud.githubusercontent.com/assets/1567433/9781817/ecb16e82-57a0-11e5-9b43-6b4f52659997.jpg"
 
         let fileURL = randomCachesFileURL
         let destination: DestinationClosure = {_, _ in fileURL }
@@ -295,7 +295,7 @@ class DownloadServiceTests: BaseTestCase {
         XCTAssertNotNil(response1?.error)
 
         XCTAssertNotNil(response2?.response)
-        XCTAssertEqual(response2?.statusCode, 200)
+        XCTAssertEqual(response2?.statusCode, 206)
         XCTAssertNotNil(response2?.downloadFileURL)
         XCTAssertEqual(response2?.result.isSuccess, true)
         XCTAssertNil(response2?.error)
