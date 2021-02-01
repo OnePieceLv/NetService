@@ -155,3 +155,22 @@ extension ParameterEncoding {
         return escaped
     }
 }
+
+
+public struct JSONEncoding: ParameterEncoding {
+    
+    public static var `default`: JSONEncoding { JSONEncoding() }
+    
+    public static var prettyPrinted: JSONEncoding { JSONEncoding(option: .prettyPrinted) }
+    
+    public var option: JSONSerialization.WritingOptions = []
+    
+    public func encode(_ request: URLRequest, parameters: [String : Any]) throws -> URLRequest {
+        var multiRequest = request
+        let httpbody = try JSONSerialization.data(withJSONObject: parameters, options: option)
+        multiRequest.httpBody = httpbody
+        let contentType: NetBuilders.ContentType = .json
+        multiRequest.setValue(contentType.rawValue, forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentType)
+        return request
+    }
+}
