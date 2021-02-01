@@ -69,6 +69,8 @@
 		B034B05625C31AA8005187C4 /* NetService.podspec in Resources */ = {isa = PBXBuildFile; fileRef = B034B05425C31AA8005187C4 /* NetService.podspec */; };
 		B034B05725C31AA8005187C4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B034B05525C31AA8005187C4 /* LICENSE */; };
 		B034B05E25C31B35005187C4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B034B05D25C31B35005187C4 /* README.md */; };
+		B08821F125C7CE4A00A61B4E /* TransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08821F025C7CE4A00A61B4E /* TransformTests.swift */; };
+		B08821F225C7CE4A00A61B4E /* TransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08821F025C7CE4A00A61B4E /* TransformTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +129,7 @@
 		B034B05425C31AA8005187C4 /* NetService.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NetService.podspec; sourceTree = "<group>"; };
 		B034B05525C31AA8005187C4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B034B05D25C31B35005187C4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B08821F025C7CE4A00A61B4E /* TransformTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				B034AF5925C2AC30005187C4 /* SessionDelegateTests.swift */,
+				B08821F025C7CE4A00A61B4E /* TransformTests.swift */,
 				B034AF5A25C2AC30005187C4 /* BaseDataServiceTests.swift */,
 				B034AF5B25C2AC30005187C4 /* UploadTests.swift */,
 				B034AF5C25C2AC30005187C4 /* AuthorizationTests.swift */,
@@ -492,6 +496,7 @@
 				B034AF6B25C2AC30005187C4 /* BaseTestCase.swift in Sources */,
 				B034AF6A25C2AC30005187C4 /* DownloadServiceTests.swift in Sources */,
 				B034AF6425C2AC30005187C4 /* SessionDelegateTests.swift in Sources */,
+				B08821F125C7CE4A00A61B4E /* TransformTests.swift in Sources */,
 				B034AF6525C2AC30005187C4 /* BaseDataServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -532,6 +537,7 @@
 				B034B03525C30C70005187C4 /* BaseTestCase.swift in Sources */,
 				B034B00725C30A59005187C4 /* AuthorizationTests.swift in Sources */,
 				B034B00C25C30A5D005187C4 /* DownloadServiceTests.swift in Sources */,
+				B08821F225C7CE4A00A61B4E /* TransformTests.swift in Sources */,
 				B034B02825C30AE4005187C4 /* NetServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
