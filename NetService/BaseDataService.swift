@@ -305,7 +305,7 @@ public extension BaseDataService {
 }
 
 
-open class BaseDownloadService: APIService {
+open class BaseDownloadService: NSObject, APIService {
     
     public var middlewares: [Middleware] = []
     

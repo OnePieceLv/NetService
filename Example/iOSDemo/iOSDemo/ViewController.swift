@@ -61,14 +61,36 @@ class DownloadAPI: BaseDownloadService, NetServiceProtocol {
     init(with url: String, parameters: [String: Any] = [:]) {
         _urlString = url
         _parameters = parameters
+//        super.init()
     }
     
     init(with url: String, headers: [String: String]) {
         _urlString = url
         _headers = headers
+//        super.init()
     }
     
     
+}
+
+struct TestRetryPolicy: RetryPolicyProtocol {
+    
+    public var retryCount: Int {
+        return 3
+    }
+    
+    public var timeDelay: TimeInterval = 0.0
+    
+    public func retry(_ request: Retryable, with error: Error, completion: RequestRetryCompletion) {
+        var service = request
+        service.prepareRetry()
+        if request.retryCount < retryCount {
+            completion(true, timeDelay)
+        } else {
+            completion(false, timeDelay)
+            service.resetRetry()
+        }
+    }
 }
 
 class ViewController: UIViewController {
@@ -114,7 +136,6 @@ class ViewController: UIViewController {
         api.async { (request) in
             print(request.response?.responseString)
         }
-        
         
         let res = api.sync()
         res.middlewares = []
