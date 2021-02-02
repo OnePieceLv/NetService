@@ -40,7 +40,7 @@ public protocol Service: AnyObject {
 
 public final class ServiceAgent: NSObject {
     
-    private var manager: URLSessionManager
+    public var manager: URLSessionManager
     
     let serviceQueue: DispatchQueue = DispatchQueue(label: "org.netservice.session-manager." + UUID().uuidString)
     
