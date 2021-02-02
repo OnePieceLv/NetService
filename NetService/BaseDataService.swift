@@ -8,7 +8,7 @@
 import Foundation
 
 
-public protocol APIService: AnyObject, Retryable {
+public protocol APIService: AnyObject {
     var apiService: BaseAPIService { get set }
     var middlewares: [Middleware] { get set }
     var retryPolicy: RetryPolicyProtocol? { get set }
@@ -29,10 +29,6 @@ public protocol APIService: AnyObject, Retryable {
 }
 
 public extension APIService {
-    var middlewares: [Middleware] {
-        get { apiService.middlewares }
-        set { apiService.middlewares = newValue}
-    }
 
     var state: NetBuilders.State {
         apiService.state
@@ -103,45 +99,13 @@ extension APIService {
     }
 
     func clear() -> Void {
-        self.clean()
-    }
-    
-    func clean() -> Void {
         self.removeRequest(task: self.task)
         self.progressHandle = nil
         self.completionClosure = nil
     }
-
-}
-
-// MARK: - Retry
-extension APIService {
-    
-    public var retryPolicy: RetryPolicyProtocol? {
-        get { apiService.retryPolicy }
-        set { apiService.retryPolicy = newValue}
-    }
-    
-    public var retryCount: Int {
-        get { apiService.retryCount }
-        set { apiService.retryCount = newValue }
-    }
-    
-    public func resetRetry() {
-        self.retryCount = 0
-    }
-    
-    public func prepareRetry() {
-        self.retryCount += 1
-    }
 }
 
 public class BaseAPIService {
-    
-    var middlewares: [Middleware] = []
-    
-    // MARK: - Retry
-    var retryPolicy: RetryPolicyProtocol? = DefaultRetryPolicy()
     
     var state: NetBuilders.State {
         return task?.apiState ?? .waitingForConnectivity
@@ -168,11 +132,8 @@ public class BaseAPIService {
     
     fileprivate var builder: RequestBuilder = RequestBuilder()
     
-    
-    var retryCount: Int = 0
-    
-    private func conformance(api: APIService) throws -> NetServiceProtocol {
-        if let netServiceAPI = (api as? NetServiceProtocol) {
+    private func conformance(api: APIService) throws -> (NetServiceProtocol & APIService) {
+        if let netServiceAPI = api as? (NetServiceProtocol & APIService) {
             return netServiceAPI
         }
         throw APIError.customFailure(message: "Must be conformance APIRequestConvertible protocol")
@@ -194,7 +155,7 @@ public class BaseAPIService {
             builderObj.authorization = api.authorization
         }
         builder = api.httpBuilderHelper(builder: builderObj)
-        builder = middlewares.reduce(builder) { return $1.prepare($0) }
+        builder = api.middlewares.reduce(builder) { return $1.prepare($0) }
         
         let request = try api.asURLRequest(with: builder, parameters: api.httpParameters())
         return request
@@ -228,6 +189,11 @@ extension BaseAPIService: CustomStringConvertible, CustomDebugStringConvertible 
 
 open class BaseDataService: NSObject, APIService {
     
+    open var middlewares: [Middleware] = []
+    
+    open var retryPolicy: RetryPolicyProtocol? = DefaultRetryPolicy()
+    
+    
     public var progressHandle: ((Progress) -> Void)?
     
     public var completionClosure: (() -> Void)?
@@ -244,21 +210,17 @@ open class BaseDataService: NSObject, APIService {
     
     private var urlRequest: URLRequest?
     
-    public func finishRequest() {
+    func finishRequest() {
         if let completeHandler = self.completionClosure {
             completeHandler()
         }
         self.finishRequest {
+            urlRequest = nil
+            requestType = nil
             self.clear()
         }
     }
     
-    
-    public func clear() {
-        urlRequest = nil
-        requestType = nil
-        self.clean()
-    }
     
     private func handleComplete(response: DataResponse) -> Void {
         self.response = self.middlewares.reduce(response) { return $1.afterReceive($0) }
@@ -345,6 +307,11 @@ public extension BaseDataService {
 
 open class BaseDownloadService: APIService {
     
+    public var middlewares: [Middleware] = []
+    
+    public var retryPolicy: RetryPolicyProtocol? = DefaultRetryPolicy()
+    
+    
     public var completionClosure: (() -> Void)?
     
     public var progressHandle: ((Progress) -> Void)?
@@ -385,10 +352,6 @@ open class BaseDownloadService: APIService {
         return self
     }
     
-    public func clear() {
-        self.downloadType = nil
-        self.clean()
-    }
     
     public func cancel() {
         self.cancel(createResumeData: false)
@@ -461,6 +424,7 @@ public extension BaseDownloadService {
             self._resumeData = self.response?.resumeData
             completion(self)
             self.finishRequest {
+                self.downloadType = nil
                 self.clear()
             }
         })
@@ -481,17 +445,16 @@ public extension BaseDownloadService {
 
 open class BaseUploadService: NSObject, APIService {
     
+    open var middlewares: [Middleware] = []
+    
+    open var retryPolicy: RetryPolicyProtocol? = DefaultRetryPolicy()
+    
+    
     public var progressHandle: ((Progress) -> Void)?
     
     public var completionClosure: (() -> Void)?
     
     public var apiService: BaseAPIService = BaseAPIService()
-    
-    public func clear() {
-        self.uploadProgress = nil
-        self.uploadType = nil
-        self.clean()
-    }
     
     public var response: DataResponse?
     
@@ -621,6 +584,8 @@ public extension BaseUploadService {
             print(response.statusCode)
             completion(self)
             self.finishRequest {
+                self.uploadProgress = nil
+                self.uploadType = nil
                 self.clear()
             }
         }
