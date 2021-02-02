@@ -211,7 +211,7 @@ class DownloadServiceTests: BaseTestCase {
         let downloadapi = DownloadAPI(with: urlString)
         downloadapi.download { (progress) in
             if progress.fractionCompleted > 0.1 {
-                downloadapi.cancel()
+                downloadapi.cancel(createResumeData: true)
             }
         } completion: { (downloadRequest) in
             response = downloadRequest.response
@@ -249,7 +249,7 @@ class DownloadServiceTests: BaseTestCase {
             guard !cancelled else { return }
             if progress.fractionCompleted > 0.4 {
                 print(progress.fractionCompleted)
-                downloadAPI.cancel()
+                downloadAPI.cancel(createResumeData: true)
                 cancelled = true
             }
         }, to: destination) { (request) in

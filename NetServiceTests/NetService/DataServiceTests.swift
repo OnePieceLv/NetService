@@ -14,13 +14,29 @@ final class TestAPI: BaseDataService, NetServiceProtocol {
     var headers: [String : String] = [:]
     
     var urlString: String {
-        return "https://httpbin.org/get"
+        return _urlString
         
+    }
+    
+    var httpMethod: NetBuilders.Method {
+        return _method
+    }
+    
+    private var _urlString: String
+    
+    private var _method: NetBuilders.Method = .GET
+    
+    init(with url: String) {
+        _urlString = url
+    }
+    
+    func setMethod(method: NetBuilders.Method) -> Self {
+        _method = method
+        return self
     }
 }
 
 class BaseDataServiceTests: BaseTestCase {
-    
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -33,7 +49,8 @@ class BaseDataServiceTests: BaseTestCase {
     func testAsync() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-        let api = TestAPI()
+        let urlString = "https://httpbin.org/get"
+        let api = TestAPI(with: urlString)
         var response: DataResponse?
         let exception = self.expectation(description: "\(api.urlString)")
         api.async { (request) in
@@ -48,11 +65,11 @@ class BaseDataServiceTests: BaseTestCase {
         XCTAssertNotNil(response?.result.success)
         XCTAssertNotNil(response?.response)
         XCTAssertNotNil(response?.responseString)
-//        XCTAssertTrue(response!.result.isFailure)
     }
     
     func testSync() throws {
-        let api = TestAPI()
+        let urlString = "https://httpbin.org/get"
+        let api = TestAPI(with: urlString)
         let res = api.sync()
 
         XCTAssertNotNil(res.response)
@@ -65,7 +82,8 @@ class BaseDataServiceTests: BaseTestCase {
     }
     
     func testPublished() throws {
-        let api = TestAPI()
+        let urlString = "https://httpbin.org/get"
+        let api = TestAPI(with: urlString)
         let request = URLRequest(url: URL.init(string: "\(api.urlString)")!)
         let exception = self.expectation(description: "test \(api.urlString)")
         var responseString: String? = nil
@@ -77,6 +95,22 @@ class BaseDataServiceTests: BaseTestCase {
         dataTask.resume()
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertTrue(true)
+    }
+    
+    func testRetryPolicy() throws {
+        let urlString = "https://httpbin.org/status/503"
+        let api = TestAPI(with: urlString)
+        let exception = self.expectation(description: "test \(api.urlString)")
+        api.setMethod(method: .DELETE).async { (request) in
+            exception.fulfill()
+        }
+        waitForExpectations(timeout: 60, handler: nil)
+        XCTAssertNotNil(api.response?.error)
+        
+        var api2 = TestAPI(with: urlString)
+        api2 = api2.setMethod(method: .DELETE).sync()
+        XCTAssertNotNil(api2.response?.error)
+        
     }
 
 //    func testPerformanceExample() throws {

@@ -181,8 +181,12 @@ class TaskDelegate: NSObject, Retryable {
             self.manager?.delegate[task] = nil
         }
         let queue = self.manager?.queue ?? DispatchQueue.main
-                
-        if let policy = retryPolicy, let err = error {
+                        
+        if let policy = retryPolicy,
+           let err = error,
+           let errCode = (err as? URLError)?.code,
+           errCode != URLError.cancelled
+        {
             policy.retry(self, with: err) { (shouldRetry, delay) in
                 guard shouldRetry else {
                     queue.async {
