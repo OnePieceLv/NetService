@@ -18,6 +18,24 @@ public final class URLSessionManager {
     
     let queue: DispatchQueue
     
+    private var requestMap: [Int: APIService] = [:]
+    
+    private var lock: NSLock = NSLock()
+    
+    subscript(task: URLSessionTask) -> APIService? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return requestMap[task.taskIdentifier]
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            requestMap[task.taskIdentifier] = newValue
+        }
+    }
+    
+    
     init(
         configuration: URLSessionConfiguration,
         delegate: SessionDelegate = SessionDelegate(),
@@ -51,7 +69,6 @@ public final class URLSessionManager {
     }
         
     private func commonInit(serverTrustPolicyManager: ServerTrustPolicyManager?) {
-        delegate.session = self
         session.serverTrustPolicyManager = serverTrustPolicyManager
     }
 
@@ -85,7 +102,7 @@ extension URLSessionManager {
 extension URLSessionManager {
     
     func data(with request: URLRequest,
-              credential: URLCredential?,
+              parameter: URLSessionParameter,
               uploadProgress: ((_ uploadProgress: Progress) -> Void)?,
               downloadProgress: ((_ downloadProgress: Progress) -> Void)?,
               completionHandler: @escaping CompletionClosure
@@ -93,7 +110,8 @@ extension URLSessionManager {
         let dataTask = session.dataTask(with: request)
         let taskDelegate = TaskDelegate(task: dataTask)
         taskDelegate.manager = self
-        if let urlCredential = credential {
+        taskDelegate.retryPolicy = parameter.retryPolicy
+        if let urlCredential = parameter.credential {
             taskDelegate.setCredential(credential: urlCredential)
         }
         if let progress = uploadProgress {
@@ -108,7 +126,7 @@ extension URLSessionManager {
     }
     
     func upload(with uploadType: Uploadable,
-                credential: URLCredential?,
+                parameter: URLSessionParameter,
                 uploadProgress: ((_ uploadProgress: Progress) -> Void)?,
                 downloadProgress: ((_ downloadProgress: Progress) -> Void)?,
                 completionHandler: @escaping CompletionClosure
@@ -119,7 +137,8 @@ extension URLSessionManager {
             uploadDelegate.taskNeedNewBodyStream = { (_ , _)in inputStream }
         }
         uploadDelegate.manager = self
-        if let urlCredential = credential {
+        uploadDelegate.retryPolicy = parameter.retryPolicy
+        if let urlCredential = parameter.credential {
             uploadDelegate.setCredential(credential: urlCredential)
         }
         if let progress = uploadProgress {
@@ -134,7 +153,7 @@ extension URLSessionManager {
     }
     
     func download(with downloadType: Downloadable,
-                  credential: URLCredential?,
+                  parameter: URLSessionParameter,
                   destinationHandler: DestinationClosure?,
                   uploadProgress: ((_ uploadProgress: Progress) -> Void)?,
                   downloadProgress: ((_ downloadProgress: Progress) -> Void)?,
@@ -143,7 +162,8 @@ extension URLSessionManager {
         let downloadTask = downloadType.task(session: session, queue: queue)
         let downloadDelegate = TaskDelegate(task: downloadTask)
         downloadDelegate.manager = self
-        if let urlCredential = credential {
+        downloadDelegate.retryPolicy = parameter.retryPolicy
+        if let urlCredential = parameter.credential {
             downloadDelegate.setCredential(credential: urlCredential)
         }
         if let progress = uploadProgress {
@@ -156,5 +176,25 @@ extension URLSessionManager {
         downloadDelegate.destinationHandler = destinationHandler
         delegate[downloadTask] = downloadDelegate
         return downloadTask
+    }
+}
+
+// MARK: - RetryRequest
+extension URLSessionManager {
+    func retryNewTask(old task: URLSessionTask) -> (APIService?, URLSessionTask?) {
+        var newTask: URLSessionTask?
+        guard let request = self[task] else {
+            return (nil, task)
+        }
+        if let requestType = (request as? BaseDataService)?.requestType {
+            newTask = requestType.task(session: self.session, queue: self.queue)
+        }
+        if let downloadType = (request as? BaseDownloadService)?.downloadType {
+            newTask = downloadType.task(session: session, queue: queue)
+        }
+        if let uploadType = (request as? BaseUploadService)?.uploadType {
+            newTask = uploadType.task(session: session, queue: queue)
+        }
+        return (request, newTask)
     }
 }

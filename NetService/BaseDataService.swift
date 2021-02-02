@@ -8,33 +8,157 @@
 import Foundation
 
 
-open class BaseAPIService: NSObject {
+public protocol APIService: AnyObject, Retryable {
+    var apiService: BaseAPIService { get set }
+    var middlewares: [Middleware] { get set }
+    var retryPolicy: RetryPolicyProtocol? { get set }
+    var state: NetBuilders.State { get }
+    var task: URLSessionTask? { get set }
+    var originalRequest: URLRequest? { get }
+    var currentRequest: URLRequest? { get }
+    var progressHandle: ((Progress) -> Void)? { get set }
+    var completionClosure: (() -> Void)? { get set }
+    func cancel() -> Void
+    func suspend() -> Void
+//    func resume(task: URLSessionTask?) -> Void
+//    func prepareRequest(api: APIService) throws -> URLRequest
+//    func addRequest(task: URLSessionTask) -> Void
+//    func removeRequest(task: URLSessionTask?) -> Void
+//    func clear() -> Void
+//    func finishRequest() -> Void
+}
+
+public extension APIService {
+    var middlewares: [Middleware] {
+        get { apiService.middlewares }
+        set { apiService.middlewares = newValue}
+    }
+
+    var state: NetBuilders.State {
+        apiService.state
+    }
+
+    var task: URLSessionTask? {
+        get { apiService.task }
+        set { apiService.task = newValue}
+    }
+
+    var originalRequest: URLRequest? {
+        apiService.originalRequest
+    }
+
+    var currentRequest: URLRequest? {
+        apiService.currentRequest
+    }
+
+    func suspend() -> Void {
+        guard let task = self.task else {
+            return
+        }
+        task.suspend()
+    }
+
+    func cancel() -> Void {
+        guard let task = self.task else {
+            return
+        }
+        removeRequest(task: self.task)
+        task.cancel()
+    }
+        
     
-    public var middlewares: [Middleware] = []
+}
+
+extension APIService {
+    
+    func resume(task: URLSessionTask?) -> Void {
+        self.task = task
+        middlewares.forEach({ $0.beforeSend(self) })
+        guard let task = self.task else {
+            return
+        }
+        addRequest(task: task)
+        task.resume()
+    }
+    
+    func prepareRequest(api: APIService) throws -> URLRequest {
+         try apiService.prepareRequest(api: api)
+    }
+    
+    func addRequest(task: URLSessionTask) -> Void {
+        ServiceAgent.shared[task] = self
+    }
+    
+    func removeRequest(task: URLSessionTask?) -> Void {
+        guard let task = task else {
+            return
+        }
+        ServiceAgent.shared[task] = nil
+    }
+    
+
+    func finishRequest(_ clear:()-> Void) -> Void {
+        middlewares.forEach({ $0.didStop(self) })
+        clear()
+    }
+
+    func clear() -> Void {
+        self.clean()
+    }
+    
+    func clean() -> Void {
+        self.removeRequest(task: self.task)
+        self.progressHandle = nil
+        self.completionClosure = nil
+    }
+
+}
+
+// MARK: - Retry
+extension APIService {
+    
+    public var retryPolicy: RetryPolicyProtocol? {
+        get { apiService.retryPolicy }
+        set { apiService.retryPolicy = newValue}
+    }
+    
+    public var retryCount: Int {
+        get { apiService.retryCount }
+        set { apiService.retryCount = newValue }
+    }
+    
+    public func resetRetry() {
+        self.retryCount = 0
+    }
+    
+    public func prepareRetry() {
+        self.retryCount += 1
+    }
+}
+
+public class BaseAPIService {
+    
+    var middlewares: [Middleware] = []
     
     // MARK: - Retry
-    public var retryPolicy: RetryPolicyProtocol? = DefaultRetryPolicy()
+    var retryPolicy: RetryPolicyProtocol? = DefaultRetryPolicy()
     
-    public var state: NetBuilders.State {
+    var state: NetBuilders.State {
         return task?.apiState ?? .waitingForConnectivity
     }
     
-    public var task: URLSessionTask? {
+    var task: URLSessionTask? {
         get { lock.lock(); defer { lock.unlock() }; return _task }
         set { lock.lock(); defer { lock.unlock() }; _task = newValue }
     }
     
-    public var originalRequest: URLRequest? {
+    var originalRequest: URLRequest? {
         return task?.originalRequest
     }
     
-    public var currentRequest: URLRequest? {
+    var currentRequest: URLRequest? {
         return task?.currentRequest
     }
-        
-    var progressHandle: ProgressClosure?
-    
-    var completionClosure: (() -> Void)?
     
     fileprivate var userCredential: URLCredential?
         
@@ -44,11 +168,12 @@ open class BaseAPIService: NSObject {
     
     fileprivate var builder: RequestBuilder = RequestBuilder()
     
-    private var _retryCount: Int = 0
     
-    private func conformance() throws -> NetServiceProtocol {
-        if let api = (self as? NetServiceProtocol) {
-            return api
+    var retryCount: Int = 0
+    
+    private func conformance(api: APIService) throws -> NetServiceProtocol {
+        if let netServiceAPI = (api as? NetServiceProtocol) {
+            return netServiceAPI
         }
         throw APIError.customFailure(message: "Must be conformance APIRequestConvertible protocol")
     }
@@ -57,8 +182,8 @@ open class BaseAPIService: NSObject {
         self.userCredential = credential
     }
     
-    fileprivate func prepareRequest() throws -> URLRequest {
-        let api = try conformance()
+    func prepareRequest(api: APIService) throws -> URLRequest {
+        let api = try conformance(api: api)
         var builderObj = RequestBuilder(urlString: api.urlString)
         builderObj.headers.merge(api.httpHeaders()) { (_, new) in new }
         builderObj.httpMethod = api.httpMethod
@@ -74,84 +199,15 @@ open class BaseAPIService: NSObject {
         let request = try api.asURLRequest(with: builder, parameters: api.httpParameters())
         return request
     }
-    
-    fileprivate func beforeResume() -> Void {
-        middlewares.forEach({ $0.beforeSend(self) })
-    }
-    
-    fileprivate func finishRequest() -> Void {
-        middlewares.forEach({ $0.didStop(self) })
-        self.clear()
-    }
-    
-    fileprivate func clear() -> Void {
-        self.removeRequest(task: self.task)
-        progressHandle = nil
-        completionClosure = nil
-    }
-    
-    fileprivate func resume(with task: URLSessionTask?) -> Void {
-        if let task = task {
-            self.task = task
-        }
-        guard let task = self.task else {
-            return
-        }
-        self.addRequest(task: task)
-        beforeResume()
-        task.resume()
-    }
-    
-    public func suspend() -> Void {
-        guard let task = self.task else {
-            return
-        }
-        task.suspend()
-    }
-    
-    public func cancel() -> Void {
-        guard let task = self.task else {
-            return
-        }
-        task.cancel()
-        self.removeRequest(task: task)
-    }
-    
-    fileprivate func addRequest(task: URLSessionTask) -> Void {
-        ServiceAgent.shared[task] = self
-    }
-    
-    fileprivate func removeRequest(task: URLSessionTask?) -> Void {
-        guard let task = task else {
-            return
-        }
-        ServiceAgent.shared[task] = nil
-    }
 }
 
-// MARK: - Retry
 
-extension BaseAPIService: Retryable {
-    public var retryCount: Int {
-        get { _retryCount }
-        set { _retryCount = newValue }
-    }
-    
-    public func prepareRetry() {
-        retryCount += 1
-    }
-    
-    public func resetRetry() {
-        retryCount = 0
-    }
-}
-
-extension BaseAPIService {
-    public override var description: String {
+extension BaseAPIService: CustomStringConvertible, CustomDebugStringConvertible {
+    public var description: String {
         return self.debugDescription
     }
     
-    public override var debugDescription: String {
+    public var debugDescription: String {
         var custom = "\r\n"
         var credential = "none"
         if let cre = self.userCredential {
@@ -170,26 +226,38 @@ extension BaseAPIService {
     }
 }
 
-open class BaseDataService: BaseAPIService {
+open class BaseDataService: NSObject, APIService {
     
+    public var progressHandle: ((Progress) -> Void)?
+    
+    public var completionClosure: (() -> Void)?
+
+    public var apiService: BaseAPIService = BaseAPIService()
+        
     public var error: Error? {
         return response?.error
     }
         
     public var response: DataResponse?
     
+    var requestType: Requestable?
+    
     private var urlRequest: URLRequest?
     
-    override fileprivate func finishRequest() {
+    public func finishRequest() {
         if let completeHandler = self.completionClosure {
             completeHandler()
         }
-        super.finishRequest()
+        self.finishRequest {
+            self.clear()
+        }
     }
     
-    override fileprivate func clear() {
-        super.clear()
+    
+    public func clear() {
         urlRequest = nil
+        requestType = nil
+        self.clean()
     }
     
     private func handleComplete(response: DataResponse) -> Void {
@@ -199,27 +267,14 @@ open class BaseDataService: BaseAPIService {
     
 }
 
-extension BaseDataService {
-    func retry(retart: @escaping (()->Void), response: DataResponse, error: Error?) -> Void {
-        if let policy = self.retryPolicy, let err = error {
-            policy.retry(self, with: err) { (shouldRetry, delay) in
-                guard !shouldRetry else {
-                    /// only handle error when retry finish
-                    self.resetRetry()
-                    self.handleComplete(response: response)
-                    return
-                }
-                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + delay) {
-                    retart()
-                }
-            }
-            self.prepareRetry()
-        }
-    }
-}
-
 // MARK: - start request
 public extension BaseDataService {
+    
+    /// set progress
+    func progress(progressClosure: @escaping (Progress) -> Void) -> Self {
+        self.progressHandle = progressClosure
+        return self
+    }
     
     func async(service: Service = ServiceAgent.shared, completion: @escaping (_ request: BaseDataService) -> Void) -> Void {
         self.completionClosure = { [weak self] in
@@ -227,67 +282,54 @@ public extension BaseDataService {
             DispatchQueue.main.async { completion(self) }
         }
         do {
-            self.urlRequest = try prepareRequest()
+            self.urlRequest = try prepareRequest(api: self)
         } catch {
             fatalError(error.localizedDescription)
         }
         guard let urlRequest = self.urlRequest else {
             fatalError("URLRequest is missing")
         }
-        let task = service.data(with: urlRequest, credential: self.userCredential, uploadProgress: nil, downloadProgress: self.progressHandle) { [weak self] (response: DataResponse) in
+        self.requestType = .request(urlRequest)
+        let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
+        let task = service.data(with: urlRequest,
+                                parameter: parameter,
+                                uploadProgress: nil,
+                                downloadProgress: self.progressHandle
+        ) { [weak self] (response: DataResponse) in
             guard let `self` = self else { return }
-            if let error = response.error {
-                self.retry(retart: { [weak self] in
-                    guard let `self` = self else { return }
-                    self.async(service: service, completion: completion)
-                }, response: response, error: error)
-                return
-            } else {
-                /// handle success
-                self.handleComplete(response: response)
-            }
+            self.handleComplete(response: response)
         }
-        self.resume(with: task)
+        self.resume(task: task)
     }
     
     func sync(service: Service = ServiceAgent.shared) -> Self {
         do {
-            self.urlRequest = try prepareRequest()
+            self.urlRequest = try prepareRequest(api: self)
         } catch {
             fatalError(error.localizedDescription)
         }
         guard let urlRequest = self.urlRequest else {
             fatalError("URLRequest is missing")
         }
+        self.requestType = .request(urlRequest)
         let semaphore = DispatchSemaphore(value: 0)
-        let task = service.data(with: urlRequest, credential: self.userCredential, uploadProgress: nil, downloadProgress: self.progressHandle) { [weak self] (response: DataResponse) in
+        let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
+        let task = service.data(with: urlRequest,
+                                parameter: parameter,
+                                uploadProgress: nil,
+                                downloadProgress: self.progressHandle
+        ) { [weak self] (response: DataResponse) in
             guard let `self` = self else { return }
-            if let error = response.error {
-                semaphore.signal()
-                self.retry(retart: { [weak self] in
-                    guard let `self` = self else { return }
-                    _ = self.sync(service: service)
-                }, response: response, error: error)
-            } else {
-                /// handle success
-                self.handleComplete(response: response)
-                semaphore.signal()
-            }
+            self.handleComplete(response: response)
+            semaphore.signal()
         }
-        self.resume(with: task)
+        self.resume(task: task)
         semaphore.wait()
         return self
         
     }
     
 
-}
-
-extension BaseDataService {
-    func progress(progressClosure: @escaping ProgressClosure) -> Self {
-        self.progressHandle = progressClosure
-        return self
-    }
 }
 
 // MARK: - transform
@@ -301,7 +343,13 @@ public extension BaseDataService {
 }
 
 
-open class BaseDownloadService: BaseAPIService {
+open class BaseDownloadService: APIService {
+    
+    public var completionClosure: (() -> Void)?
+    
+    public var progressHandle: ((Progress) -> Void)?
+    
+    public var apiService: BaseAPIService = BaseAPIService()
     
     public var resumeData: Data? {
         get {
@@ -337,8 +385,13 @@ open class BaseDownloadService: BaseAPIService {
         return self
     }
     
-    public override func cancel() {
-        self.cancel(createResumeData: true)
+    public func clear() {
+        self.downloadType = nil
+        self.clean()
+    }
+    
+    public func cancel() {
+        self.cancel(createResumeData: false)
     }
 
     public func cancel(createResumeData: Bool) {
@@ -387,7 +440,7 @@ public extension BaseDownloadService {
                   completion: @escaping ((_ request: BaseDownloadService) -> Void)
     ) -> Void {
         do {
-            let urlRequest = try prepareRequest()
+            let urlRequest = try prepareRequest(api: self)
             let downloadable: Downloadable = .request(urlRequest)
             self.download(with: downloadable, progress: progress, destination: destination, service: service, completion: completion)
         } catch {
@@ -401,13 +454,17 @@ public extension BaseDownloadService {
                           service: Service,
                           completion: @escaping ((_ request: BaseDownloadService) -> Void)
     ) -> Void {
-        let downloadTask = service.download(with: downloadable, credential: self.userCredential, destinationHandler: destination, uploadProgress: nil, downloadProgress: progress, completionHandler: { (downloadResponse: DownloadResponse) in
+        let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
+        self.downloadType = downloadable
+        let downloadTask = service.download(with: downloadable, parameter: parameter, destinationHandler: destination, uploadProgress: nil, downloadProgress: progress, completionHandler: { (downloadResponse: DownloadResponse) in
             self.response = self.middlewares.reduce(downloadResponse) { return $1.afterReceive($0) }
             self._resumeData = self.response?.resumeData
             completion(self)
-            self.finishRequest()
+            self.finishRequest {
+                self.clear()
+            }
         })
-        self.resume(with: downloadTask)
+        self.resume(task: downloadTask)
     }
     
 }
@@ -422,21 +479,30 @@ public extension BaseDownloadService {
 }
 
 
-open class BaseUploadService: BaseAPIService {
+open class BaseUploadService: NSObject, APIService {
+    
+    public var progressHandle: ((Progress) -> Void)?
+    
+    public var completionClosure: (() -> Void)?
+    
+    public var apiService: BaseAPIService = BaseAPIService()
+    
+    public func clear() {
+        self.uploadProgress = nil
+        self.uploadType = nil
+        self.clean()
+    }
     
     public var response: DataResponse?
     
     public static let multipartFormDataEncodingMemoryThreshold: UInt64 = 10_000_000
     
     var uploadProgress: ((Progress) -> Void)?
-
-    override fileprivate func clear() {
-        self.uploadProgress = nil
-        super.clear()
-    }
+    
+    var uploadType: Uploadable?
     
     func build(formdata: MultipartFormData, encodingMemoryThreshold: UInt64, isInBackgroundSession: Bool) throws -> (Uploadable, URLRequest?) {
-        var request = try self.prepareRequest()
+        var request = try self.prepareRequest(api: self)
         request.setValue(formdata.contentType, forHTTPHeaderField: "Content-Type")
         
         let uploadable: Uploadable
@@ -482,7 +548,7 @@ public extension BaseUploadService {
                 completion: @escaping (_ request: BaseUploadService) -> Void
     ) -> Void {
         do {
-            let request = try prepareRequest()
+            let request = try prepareRequest(api: self)
             let upload: Uploadable = .data(data, request)
             self.upload(with: upload, progress: closure, completion: completion)
         } catch {
@@ -498,7 +564,7 @@ public extension BaseUploadService {
                 completion: @escaping (_ request: BaseUploadService) -> Void
     ) -> Void {
         do {
-            let request = try prepareRequest()
+            let request = try prepareRequest(api: self)
             let upload: Uploadable = .file(file, request)
             self.upload(with: upload, progress: closure, completion: completion)
         } catch {
@@ -513,7 +579,7 @@ public extension BaseUploadService {
                 completion: @escaping (_ request: BaseUploadService) -> Void
     ) -> Void {
         do {
-            var request = try prepareRequest()
+            var request = try prepareRequest(api: self)
             let header: NetBuilders.HTTPHeader = NetBuilders.HTTPHeader.contentLength(contentLength)
             request.setValue(header.value, forHTTPHeaderField: header.name)
             let upload: Uploadable = .stream(stream, request)
@@ -548,13 +614,17 @@ public extension BaseUploadService {
                         completion: @escaping (_ request: BaseUploadService) -> Void
     ) {
         self.uploadProgress = closure
-        let task = service.upload(with: upload, credential: self.userCredential, uploadProgress: uploadProgress, downloadProgress: nil) { (response: DataResponse) in
+        self.uploadType = upload
+        let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
+        let task = service.upload(with: upload, parameter: parameter, uploadProgress: uploadProgress, downloadProgress: nil) { (response: DataResponse) in
             self.response = self.middlewares.reduce(response) { $1.afterReceive($0) }
             print(response.statusCode)
             completion(self)
-            self.finishRequest()
+            self.finishRequest {
+                self.clear()
+            }
         }
-        self.resume(with: task)
+        self.resume(task: task)
     }
 }
 

@@ -12,8 +12,8 @@ public typealias RequestRetryCompletion = (_ shouldRetry: Bool, _ timeDelay: Tim
 
 public protocol Retryable {
     var retryCount: Int { get set }
-    func prepareRetry() -> Void
-    func resetRetry() -> Void
+    mutating func prepareRetry() -> Void
+    mutating func resetRetry() -> Void
 }
 
 public protocol RetryPolicyProtocol {
@@ -34,10 +34,13 @@ public struct DefaultRetryPolicy: RetryPolicyProtocol {
     public var timeDelay: TimeInterval = 0.0
     
     public func retry(_ request: Retryable, with error: Error, completion: RequestRetryCompletion) {
+        var service = request
+        service.prepareRetry()
         if request.retryCount < retryCount {
             completion(true, timeDelay)
         } else {
             completion(false, timeDelay)
+            service.resetRetry()
         }
     }
 }

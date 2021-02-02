@@ -8,9 +8,7 @@
 import Foundation
 
 class SessionDelegate: NSObject {
-    
-    weak var session: URLSessionManager?
-    
+        
     private var taskDelegateMap: [Int:TaskDelegate] = [:]
     
     private var lock: NSLock = NSLock()

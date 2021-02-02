@@ -30,7 +30,7 @@
 		B034AF4D25C2AB3A005187C4 /* Middleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF3A25C2AB3A005187C4 /* Middleware.swift */; };
 		B034AF5525C2AB9E005187C4 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5425C2AB9E005187C4 /* APIError.swift */; };
 		B034AF6425C2AC30005187C4 /* SessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5925C2AC30005187C4 /* SessionDelegateTests.swift */; };
-		B034AF6525C2AC30005187C4 /* BaseDataServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5A25C2AC30005187C4 /* BaseDataServiceTests.swift */; };
+		B034AF6525C2AC30005187C4 /* DataServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5A25C2AC30005187C4 /* DataServiceTests.swift */; };
 		B034AF6625C2AC30005187C4 /* UploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5B25C2AC30005187C4 /* UploadTests.swift */; };
 		B034AF6725C2AC30005187C4 /* AuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5C25C2AC30005187C4 /* AuthorizationTests.swift */; };
 		B034AF6825C2AC30005187C4 /* unicorn.png in Resources */ = {isa = PBXBuildFile; fileRef = B034AF5F25C2AC30005187C4 /* unicorn.png */; };
@@ -39,7 +39,7 @@
 		B034AF6B25C2AC30005187C4 /* BaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF6325C2AC30005187C4 /* BaseTestCase.swift */; };
 		B034AFD625C2EFEB005187C4 /* NetService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B034AFCD25C2EFEB005187C4 /* NetService.framework */; };
 		B034AFFC25C30A4F005187C4 /* SessionDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5925C2AC30005187C4 /* SessionDelegateTests.swift */; };
-		B034AFFD25C30A52005187C4 /* BaseDataServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5A25C2AC30005187C4 /* BaseDataServiceTests.swift */; };
+		B034AFFD25C30A52005187C4 /* DataServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5A25C2AC30005187C4 /* DataServiceTests.swift */; };
 		B034B00225C30A55005187C4 /* UploadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5B25C2AC30005187C4 /* UploadTests.swift */; };
 		B034B00725C30A59005187C4 /* AuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF5C25C2AC30005187C4 /* AuthorizationTests.swift */; };
 		B034B00C25C30A5D005187C4 /* DownloadServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF6225C2AC30005187C4 /* DownloadServiceTests.swift */; };
@@ -69,6 +69,8 @@
 		B034B05625C31AA8005187C4 /* NetService.podspec in Resources */ = {isa = PBXBuildFile; fileRef = B034B05425C31AA8005187C4 /* NetService.podspec */; };
 		B034B05725C31AA8005187C4 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B034B05525C31AA8005187C4 /* LICENSE */; };
 		B034B05E25C31B35005187C4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B034B05D25C31B35005187C4 /* README.md */; };
+		B057005025C9B4D100D73456 /* NetServiceDataStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = B057004F25C9B4D100D73456 /* NetServiceDataStruct.swift */; };
+		B057005125C9B4D100D73456 /* NetServiceDataStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = B057004F25C9B4D100D73456 /* NetServiceDataStruct.swift */; };
 		B08821F125C7CE4A00A61B4E /* TransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08821F025C7CE4A00A61B4E /* TransformTests.swift */; };
 		B08821F225C7CE4A00A61B4E /* TransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08821F025C7CE4A00A61B4E /* TransformTests.swift */; };
 		B088220025C7F57E00A61B4E /* ServerTrustPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08821FF25C7F57E00A61B4E /* ServerTrustPolicyTests.swift */; };
@@ -164,7 +166,7 @@
 		B034AF3A25C2AB3A005187C4 /* Middleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
 		B034AF5425C2AB9E005187C4 /* APIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		B034AF5925C2AC30005187C4 /* SessionDelegateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionDelegateTests.swift; sourceTree = "<group>"; };
-		B034AF5A25C2AC30005187C4 /* BaseDataServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDataServiceTests.swift; sourceTree = "<group>"; };
+		B034AF5A25C2AC30005187C4 /* DataServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataServiceTests.swift; sourceTree = "<group>"; };
 		B034AF5B25C2AC30005187C4 /* UploadTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadTests.swift; sourceTree = "<group>"; };
 		B034AF5C25C2AC30005187C4 /* AuthorizationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationTests.swift; sourceTree = "<group>"; };
 		B034AF5F25C2AC30005187C4 /* unicorn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unicorn.png; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 		B034B05425C31AA8005187C4 /* NetService.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NetService.podspec; sourceTree = "<group>"; };
 		B034B05525C31AA8005187C4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B034B05D25C31B35005187C4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B057004F25C9B4D100D73456 /* NetServiceDataStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetServiceDataStruct.swift; sourceTree = "<group>"; };
 		B08821F025C7CE4A00A61B4E /* TransformTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformTests.swift; sourceTree = "<group>"; };
 		B08821FF25C7F57E00A61B4E /* ServerTrustPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerTrustPolicyTests.swift; sourceTree = "<group>"; };
 		B088226025C7F5EA00A61B4E /* expired.badssl.com-intermediate-ca-1.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = "expired.badssl.com-intermediate-ca-1.cer"; sourceTree = "<group>"; };
@@ -282,6 +285,7 @@
 				B034AF3625C2AB3A005187C4 /* SessionDelegate.swift */,
 				B034AF3725C2AB3A005187C4 /* TaskDelegate.swift */,
 				B034AF3225C2AB3A005187C4 /* URLSessionManager.swift */,
+				B057004F25C9B4D100D73456 /* NetServiceDataStruct.swift */,
 			);
 			path = NetService;
 			sourceTree = "<group>";
@@ -311,7 +315,7 @@
 			children = (
 				B034AF5925C2AC30005187C4 /* SessionDelegateTests.swift */,
 				B08821F025C7CE4A00A61B4E /* TransformTests.swift */,
-				B034AF5A25C2AC30005187C4 /* BaseDataServiceTests.swift */,
+				B034AF5A25C2AC30005187C4 /* DataServiceTests.swift */,
 				B034AF5B25C2AC30005187C4 /* UploadTests.swift */,
 				B034AF5C25C2AC30005187C4 /* AuthorizationTests.swift */,
 				B034AF6225C2AC30005187C4 /* DownloadServiceTests.swift */,
@@ -645,6 +649,7 @@
 				B034AF3E25C2AB3A005187C4 /* Result+InternalExtension.swift in Sources */,
 				B034AF4825C2AB3A005187C4 /* NetBuilders+ContentType.swift in Sources */,
 				B034AF4C25C2AB3A005187C4 /* Request.swift in Sources */,
+				B057005025C9B4D100D73456 /* NetServiceDataStruct.swift in Sources */,
 				B034AF5525C2AB9E005187C4 /* APIError.swift in Sources */,
 				B034AF4925C2AB3A005187C4 /* SessionDelegate.swift in Sources */,
 				B034AF4525C2AB3A005187C4 /* URLSessionManager.swift in Sources */,
@@ -671,7 +676,7 @@
 				B034AF6425C2AC30005187C4 /* SessionDelegateTests.swift in Sources */,
 				B08821F125C7CE4A00A61B4E /* TransformTests.swift in Sources */,
 				B088220025C7F57E00A61B4E /* ServerTrustPolicyTests.swift in Sources */,
-				B034AF6525C2AC30005187C4 /* BaseDataServiceTests.swift in Sources */,
+				B034AF6525C2AC30005187C4 /* DataServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,6 +692,7 @@
 				B034B01625C30AAD005187C4 /* NetBuilders+Authorization.swift in Sources */,
 				B034B01725C30AAD005187C4 /* NetBuilders+CacheControl.swift in Sources */,
 				B034B01825C30AAD005187C4 /* NetBuilders+ContentType.swift in Sources */,
+				B057005125C9B4D100D73456 /* NetServiceDataStruct.swift in Sources */,
 				B034B01925C30AAD005187C4 /* ParameterEncoding.swift in Sources */,
 				B034B01A25C30AAD005187C4 /* Request.swift in Sources */,
 				B034B01B25C30AAD005187C4 /* RequestBuilder.swift in Sources */,
@@ -705,7 +711,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B034AFFD25C30A52005187C4 /* BaseDataServiceTests.swift in Sources */,
+				B034AFFD25C30A52005187C4 /* DataServiceTests.swift in Sources */,
 				B034AFFC25C30A4F005187C4 /* SessionDelegateTests.swift in Sources */,
 				B034B00225C30A55005187C4 /* UploadTests.swift in Sources */,
 				B034B03525C30C70005187C4 /* BaseTestCase.swift in Sources */,

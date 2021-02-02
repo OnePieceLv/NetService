@@ -7,32 +7,30 @@
 
 import Foundation
 
-public typealias CompletionResult = (_ response: DataResponse) -> Void
-
 public protocol Service: AnyObject {
     
     static var shared: Service { get }
     
     var isInBackgroundSession: Bool { get }
     
-    subscript(_ task: URLSessionTask) -> BaseAPIService? { get set }
+    subscript(_ task: URLSessionTask) -> APIService? { get set }
     
     func data(with request: URLRequest,
-              credential: URLCredential?,
+              parameter: URLSessionParameter,
               uploadProgress: ((_ uploadProgress: Progress) -> Void)?,
               downloadProgress: ((_ downloadProgress: Progress) -> Void)?,
               completionHandler: @escaping CompletionResult
     ) -> URLSessionDataTask
     
     func upload(with upload: Uploadable,
-                credential: URLCredential?,
+                parameter: URLSessionParameter,
                 uploadProgress: ((_ uploadProgress: Progress) -> Void)?,
                 downloadProgress: ((_ downloadProgress: Progress) -> Void)?,
                 completionHandler: @escaping CompletionResult
     ) -> URLSessionDataTask
     
     func download(with download: Downloadable,
-                  credential: URLCredential?,
+                  parameter: URLSessionParameter,
                   destinationHandler: DestinationClosure?,
                   uploadProgress: ((_ uploadProgress: Progress) -> Void)?,
                   downloadProgress: ((_ downloadProgress: Progress) -> Void)?,
@@ -43,10 +41,6 @@ public protocol Service: AnyObject {
 public final class ServiceAgent: NSObject {
     
     private var manager: URLSessionManager
-    
-    private var requestMap: [Int: BaseAPIService] = [:]
-    
-    private var lock: NSLock = NSLock()
     
     let serviceQueue: DispatchQueue = DispatchQueue(label: "org.netservice.session-manager." + UUID().uuidString)
     
@@ -98,27 +92,24 @@ extension ServiceAgent: Service {
         return client
     }()
     
-    public subscript(_ task: URLSessionTask) -> BaseAPIService? {
+    public subscript(_ task: URLSessionTask) -> APIService? {
+        
         get {
-            lock.lock()
-            defer { lock.unlock() }
-            return requestMap[task.taskIdentifier]
+            return manager[task]
         }
         set {
-            lock.lock()
-            defer { lock.unlock() }
-            requestMap[task.taskIdentifier] = newValue
+            manager[task] = newValue
         }
     }
     
     public func data(with request: URLRequest,
-                     credential: URLCredential?,
+                     parameter: URLSessionParameter,
                      uploadProgress: ((Progress) -> Void)?,
                      downloadProgress: ((Progress) -> Void)?,
                      completionHandler: @escaping CompletionResult) -> URLSessionDataTask {
         let completion = completionHandler
         let dataTask = manager.data(with: request,
-                                    credential: credential,
+                                    parameter: parameter,
                                     uploadProgress: uploadProgress,
                                     downloadProgress: downloadProgress) { (res: TaskResult) in
             let result = DataResponse.serializeResponseData(response: res.response, data: res.data, error: res.error)
@@ -131,11 +122,11 @@ extension ServiceAgent: Service {
     }
     
     public func upload(with upload: Uploadable,
-                       credential: URLCredential?,
+                       parameter: URLSessionParameter,
                        uploadProgress: ((Progress) -> Void)?, downloadProgress: ((Progress) -> Void)?, completionHandler: @escaping CompletionResult) -> URLSessionDataTask {
         let completion = completionHandler
         let uploadTask = manager.upload(with: upload,
-                                        credential: credential,
+                                        parameter: parameter,
                                         uploadProgress: uploadProgress,
                                         downloadProgress: downloadProgress) { (res: TaskResult) in
             let result = DataResponse.serializeResponseData(response: res.response, data: res.data, error: res.error)
@@ -147,7 +138,7 @@ extension ServiceAgent: Service {
     }
     
     public func download(with download: Downloadable,
-                         credential: URLCredential?,
+                         parameter: URLSessionParameter,
                          destinationHandler: DestinationClosure?,
                          uploadProgress: ((Progress) -> Void)?,
                          downloadProgress: ((Progress) -> Void)?,
@@ -155,7 +146,7 @@ extension ServiceAgent: Service {
     ) -> URLSessionDownloadTask {
         let completion = completionHandler
         return manager.download(with: download,
-                                credential: credential,
+                                parameter: parameter,
                                 destinationHandler: destinationHandler,
                                 uploadProgress: uploadProgress,
                                 downloadProgress: downloadProgress) { (res: TaskResult) in

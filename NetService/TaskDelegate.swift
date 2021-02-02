@@ -8,7 +8,6 @@
 import Foundation
 
 typealias ProgressClosure = (Progress) -> Void
-public typealias DestinationClosure = ((_ temporaryURL: URL?, _ response: URLResponse?) -> URL?)
 typealias CompletionClosure = ((_ result: TaskResult) -> Void)
 
 public struct TaskResult {
@@ -21,54 +20,8 @@ public struct TaskResult {
     let metrics: URLSessionTaskMetrics?
 }
 
-public enum Uploadable {
-    case data(Data, URLRequest)
-    case file(URL, URLRequest)
-    case stream(InputStream, URLRequest)
-    
-    func task(session: URLSession, queue: DispatchQueue) -> URLSessionUploadTask {
-        let task: URLSessionUploadTask
-        switch self {
-        case .data(let data, let urlRequest):
-            task = queue.sync { session.uploadTask(with: urlRequest, from: data) }
-        case .file(let url, let urlRequest):
-            task = queue.sync {  session.uploadTask(with: urlRequest, fromFile: url) }
-        case .stream(_, let urlRequest):
-            task = queue.sync { session.uploadTask(withStreamedRequest: urlRequest) }
-        }
-        return task
-    }
-    
-    func request() -> URLRequest {
-        switch self {
-        case .data(_, let urlRequest):
-            return urlRequest
-        case .file(_, let urlRequest):
-            return urlRequest
-        case .stream(_, let urlRequest):
-            return urlRequest
-        }
-    }
-}
 
-public enum Downloadable {
-    case request(URLRequest)
-    case resume(Data)
-    
-    func task(session: URLSession, queue: DispatchQueue ) -> URLSessionDownloadTask {
-        let task: URLSessionDownloadTask
-        switch self {
-        case .request(let urlRequest):
-            task = queue.sync { session.downloadTask(with: urlRequest) }
-        case .resume(let data):
-            task = queue.sync { session.downloadTask(withResumeData: data) }
-        }
-        return task
-    }
-}
-
-
-class TaskDelegate: NSObject {
+class TaskDelegate: NSObject, Retryable {
     
     var error: Error?
 
@@ -81,6 +34,8 @@ class TaskDelegate: NSObject {
     }
     
     var metrics: URLSessionTaskMetrics?
+    
+    var retryPolicy: RetryPolicyProtocol?
         
     weak var manager: URLSessionManager?
     
@@ -97,6 +52,17 @@ class TaskDelegate: NSObject {
         didSet { reset() }
     }
     
+    // Retryable
+//    weak var retryRequest: (APIService & Retryable)?
+    var retryCount: Int = 0
+
+    func prepareRetry() {
+        retryCount += 1
+    }
+
+    func resetRetry() {
+        retryCount = 0
+    }
     
     // MARK: - data
     
@@ -127,7 +93,6 @@ class TaskDelegate: NSObject {
     private var temporaryFile: URL?
     
     private var destinationFile: URL?
-    
     
     class func suggestDestinationFile(
         for searchDirectory: FileManager.SearchPathDirectory = .documentDirectory,
@@ -210,17 +175,41 @@ class TaskDelegate: NSObject {
             if let err = self.error {
                 self.resumeData = (err as NSError).userInfo[NSURLSessionDownloadTaskResumeData] as? Data
             }
-            let taskResult = TaskResult(data: self.data, downloadFileURL: self.destinationFile, resumeData: self.resumeData, response: task.response as? HTTPURLResponse, error: error, task: task, metrics: self.metrics)
+            let taskResult = TaskResult(data: self.data, downloadFileURL: self.destinationFile, resumeData: self.resumeData, response: task.response as? HTTPURLResponse, error: self.error, task: task, metrics: self.metrics)
             completion(taskResult)
             self.completionHandler = nil
             self.manager?.delegate[task] = nil
         }
-        
-        
         let queue = self.manager?.queue ?? DispatchQueue.main
-        queue.async {
-            completeTask(session, task, error)
+                
+        if let policy = retryPolicy, let err = error {
+            policy.retry(self, with: err) { (shouldRetry, delay) in
+                guard shouldRetry else {
+                    queue.async {
+                        completeTask(session, task, error)
+                    }
+                    return
+                }
+
+                DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + delay) { [weak self] in
+                    guard let `self` = self else { return }                    
+                    if let (request, new) = self.manager?.retryNewTask(old: task),
+                       let newTask = new,
+                       let api = request {
+                        self.manager?.delegate[newTask] = self
+                        api.resume(task: new)
+                    }
+                }
+            }
+            
+            
+        } else {
+            queue.async {
+                completeTask(session, task, error)
+            }
         }
+        
+        
     }
     
     // MARK: - work with upload task
