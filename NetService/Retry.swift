@@ -35,9 +35,9 @@ public struct DefaultRetryPolicy: RetryPolicyProtocol {
     
     public func retry(_ request: Retryable, with error: Error, completion: RequestRetryCompletion) {
         var service = request
-        service.prepareRetry()
         if request.retryCount < retryCount {
             completion(true, timeDelay)
+            service.prepareRetry()
         } else {
             completion(false, timeDelay)
             service.resetRetry()
