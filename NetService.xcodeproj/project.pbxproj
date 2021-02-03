@@ -243,6 +243,7 @@
 		B034AF0125C2AAA2005187C4 = {
 			isa = PBXGroup;
 			children = (
+				B05EC36525CB366700323ECC /* images */,
 				B034B05C25C31B22005187C4 /* Documentation */,
 				B034B05325C31A93005187C4 /* Deployment */,
 				B034AF0D25C2AAA2005187C4 /* NetService */,
@@ -358,6 +359,13 @@
 				B034B05D25C31B35005187C4 /* README.md */,
 			);
 			name = Documentation;
+			sourceTree = "<group>";
+		};
+		B05EC36525CB366700323ECC /* images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = images;
 			sourceTree = "<group>";
 		};
 		B088225E25C7F5EA00A61B4E /* Certificates */ = {
