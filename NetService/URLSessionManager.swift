@@ -18,23 +18,7 @@ public final class URLSessionManager {
     
     let queue: DispatchQueue
     
-    private var requestMap: [Int: APIService] = [:]
-    
-    private var lock: NSLock = NSLock()
-    
-    subscript(task: URLSessionTask) -> APIService? {
-        get {
-            lock.lock()
-            defer { lock.unlock() }
-            return requestMap[task.taskIdentifier]
-        }
-        set {
-            lock.lock()
-            defer { lock.unlock() }
-            requestMap[task.taskIdentifier] = newValue
-        }
-    }
-    
+    weak var service: Service?
     
     init(
         configuration: URLSessionConfiguration,
@@ -183,7 +167,7 @@ extension URLSessionManager {
 extension URLSessionManager {
     func retryNewTask(old task: URLSessionTask) -> (APIService?, URLSessionTask?) {
         var newTask: URLSessionTask?
-        guard let request = self[task] else {
+        guard let request = service?[task] else {
             return (nil, task)
         }
         if let requestType = (request as? BaseDataService)?.requestType {

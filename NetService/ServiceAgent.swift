@@ -42,6 +42,10 @@ public final class ServiceAgent: NSObject {
     
     public var manager: URLSessionManager
     
+    private var requestMap: [Int: APIService] = [:]
+
+    private var lock: NSLock = NSLock()
+    
     let serviceQueue: DispatchQueue = DispatchQueue(label: "org.netservice.session-manager." + UUID().uuidString)
     
     private override init() {
@@ -53,6 +57,7 @@ public final class ServiceAgent: NSObject {
         configuration.allowsCellularAccess = true
         manager = URLSessionManager(configuration:configuration, queue: serviceQueue)
         super.init()
+        manager.service = self
     }
     
     public init(configurate: ((_ configuration: URLSessionConfiguration) -> URLSessionConfiguration)? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil) {
@@ -69,6 +74,7 @@ public final class ServiceAgent: NSObject {
                                     serverTrustPolicyManager: serverTrustPolicyManager
         )
         super.init()
+        manager.service = self
     }
 }
 
@@ -92,15 +98,28 @@ extension ServiceAgent: Service {
         return client
     }()
     
-    public subscript(_ task: URLSessionTask) -> APIService? {
-        
+    public subscript(task: URLSessionTask) -> APIService? {
         get {
-            return manager[task]
+            lock.lock()
+            defer { lock.unlock() }
+            return requestMap[task.taskIdentifier]
         }
         set {
-            manager[task] = newValue
+            lock.lock()
+            defer { lock.unlock() }
+            requestMap[task.taskIdentifier] = newValue
         }
     }
+    
+//    public subscript(_ task: URLSessionTask) -> APIService? {
+//
+//        get {
+//            return manager[task]
+//        }
+//        set {
+//            manager[task] = newValue
+//        }
+//    }
     
     public func data(with request: URLRequest,
                      parameter: URLSessionParameter,
