@@ -115,6 +115,31 @@ class BaseDataServiceTests: BaseTestCase {
         XCTAssertEqual(api2.response?.statusCode, 504)
 
     }
+    
+    class CustomMiddlewares: Middleware {
+        func prepare(_ builder: RequestBuilder) -> RequestBuilder {
+            XCTAssertEqual(builder.url?.absoluteString, "https://httpbin.org/get")
+            XCTAssertEqual(builder.httpMethod, .GET)
+            return builder
+        }
+        func afterReceive<Response>(_ result: Response) -> Response where Response : Responseable {
+            XCTAssertEqual(result.statusCode, 200)
+            XCTAssertNil(result.error)
+            return result
+        }
+    }
+    
+    func testMiddlewares() throws {
+        let urlString = "https://httpbin.org/get"
+        let api = TestAPI(with: urlString)
+        api.middlewares = [CustomMiddlewares()]
+        let exception = self.expectation(description: "\(api.urlString)")
+        api.async { (request) in
+            exception.fulfill()
+        }
+        waitForExpectations(timeout: timeout, handler: nil)
+
+    }
 
 //    func testPerformanceExample() throws {
 //        // This is an example of a performance test case.
