@@ -40,9 +40,6 @@ pod 'NetService', '~> 1.0'
 ### Request asynchronously
 ```swift
 final class YourAPI: BaseDataService, NetServiceProtocol {
-    var parameters: [String : Any] = [:]
-    
-    var headers: [String : String] = [:]
     
     var urlString: String {
         return _urlString
