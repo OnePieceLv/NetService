@@ -12,7 +12,7 @@ public protocol Middleware {
     
     func beforeSend<TaskType: APIService>(_ request: TaskType) -> Void
     
-    func afterReceive<Result>(_ response: Result) -> Result
+    func afterReceive<Response: Responseable>(_ result: Response) -> Response
     
     func didStop<TaskType: APIService>(_ request: TaskType) -> Void
 }
@@ -22,7 +22,7 @@ extension Middleware {
     
     func beforeSend<TaskType: APIService>(_ request: TaskType) -> Void {}
     
-    func afterReceive<Result>(_ response: Result) -> Result { response }
-    
+    func afterReceive<Response: Responseable>(_ result: Response) -> Response { result }
+
     func didStop<TaskType: APIService>(_ request: TaskType) -> Void {}
 }

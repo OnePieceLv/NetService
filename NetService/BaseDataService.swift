@@ -20,12 +20,6 @@ public protocol APIService: AnyObject {
     var completionClosure: (() -> Void)? { get set }
     func cancel() -> Void
     func suspend() -> Void
-//    func resume(task: URLSessionTask?) -> Void
-//    func prepareRequest(api: APIService) throws -> URLRequest
-//    func addRequest(task: URLSessionTask) -> Void
-//    func removeRequest(task: URLSessionTask?) -> Void
-//    func clear() -> Void
-//    func finishRequest() -> Void
 }
 
 public extension APIService {
@@ -419,10 +413,17 @@ public extension BaseDownloadService {
     ) -> Void {
         let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
         self.downloadType = downloadable
+        self.completionClosure = {
+            DispatchQueue.main.async {
+                completion(self)
+            }
+        }
         let downloadTask = service.download(with: downloadable, parameter: parameter, destinationHandler: destination, uploadProgress: nil, downloadProgress: progress, completionHandler: { (downloadResponse: DownloadResponse) in
             self.response = self.middlewares.reduce(downloadResponse) { return $1.afterReceive($0) }
             self._resumeData = self.response?.resumeData
-            completion(self)
+            if let completionHandler = self.completionClosure {
+                completionHandler()
+            }
             self.finishRequest {
                 self.downloadType = nil
                 self.clear()
@@ -578,11 +579,17 @@ public extension BaseUploadService {
     ) {
         self.uploadProgress = closure
         self.uploadType = upload
+        self.completionClosure = {
+            DispatchQueue.main.async {
+                completion(self)
+            }
+        }
         let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
         let task = service.upload(with: upload, parameter: parameter, uploadProgress: uploadProgress, downloadProgress: nil) { (response: DataResponse) in
             self.response = self.middlewares.reduce(response) { $1.afterReceive($0) }
-            print(response.statusCode)
-            completion(self)
+            if let completionHandler = self.completionClosure {
+                completionHandler()
+            }
             self.finishRequest {
                 self.uploadProgress = nil
                 self.uploadType = nil

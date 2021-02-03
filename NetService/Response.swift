@@ -33,8 +33,33 @@ public struct DefaultJSONTransform: DataTransformProtocol {
     }
 }
 
+public protocol Responseable {
+    
+    associatedtype T
+    
+    var response: HTTPURLResponse? { get }
+    
+    var statusCode: Int { get }
+    
+    var result: Result<T, Error> { get set }
+    
+    var value: T? { get }
+    
+    var error: Error? { get }
 
-public struct DataResponse {
+}
+
+extension Responseable {
+    
+    var responseString: String? { nil }
+    
+    func responseJSON() throws -> [String: Any]? { nil }
+}
+
+
+public struct DataResponse: Responseable {
+    
+    public typealias T = Data
     
     public let request: URLRequest
         
@@ -48,7 +73,7 @@ public struct DataResponse {
         return response?.statusCode ?? -1
     }
     
-    public let result: Result<Data, Error>
+    public var result: Result<Data, Error>
     
     public var value: Data? { result.success }
     
@@ -98,7 +123,9 @@ public struct DataResponse {
     }
 }
 
-public struct DownloadResponse {
+public struct DownloadResponse: Responseable {
+    
+    public typealias T = URL
     
     public let metrics: URLSessionTaskMetrics?
     
@@ -112,7 +139,7 @@ public struct DownloadResponse {
         return response?.statusCode ?? -1
     }
 
-    public let result: Result<URL, Error>
+    public var result: Result<URL, Error>
 
     /// Returns the associated value of the result if it is a success, `nil` otherwise.
     public var value: URL? { return result.success }
