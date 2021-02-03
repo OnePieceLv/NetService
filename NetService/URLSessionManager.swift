@@ -7,8 +7,7 @@
 
 import Foundation
 
-
-public final class URLSessionManager {
+final class URLSessionManager {
     
     var isInBackgroundSession: Bool { session.configuration.identifier != nil }
 

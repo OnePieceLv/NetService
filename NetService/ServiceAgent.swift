@@ -40,7 +40,7 @@ public protocol Service: AnyObject {
 
 public final class ServiceAgent: NSObject {
     
-    public var manager: URLSessionManager
+    var manager: URLSessionManager
     
     private var requestMap: [Int: APIService] = [:]
 
