@@ -182,11 +182,17 @@ class TaskDelegate: NSObject, Retryable {
         }
         let queue = self.manager?.queue ?? DispatchQueue.main
                         
+//        let error: Error? = NSError(domain: "httpbin.org", code: 503, userInfo: nil)
+        
+        var isNotCancelled = true
+        
+        if let errCode = (error as? URLError)?.code {
+            isNotCancelled = (errCode != .cancelled)
+        }
+        
         if let policy = retryPolicy,
            let err = error,
-           let errCode = (err as? URLError)?.code,
-           errCode != URLError.cancelled
-        {
+           isNotCancelled {
             policy.retry(self, with: err) { (shouldRetry, delay) in
                 guard shouldRetry else {
                     queue.async {
@@ -200,8 +206,9 @@ class TaskDelegate: NSObject, Retryable {
                     if let (request, new) = self.manager?.retryNewTask(old: task),
                        let newTask = new,
                        let api = request {
+                        self.manager?.delegate[task] = nil
                         self.manager?.delegate[newTask] = self
-                        api.resume(task: new)
+                        api.resume(task: newTask)
                     }
                 }
             }
