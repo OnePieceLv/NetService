@@ -106,11 +106,14 @@ class BaseDataServiceTests: BaseTestCase {
         }
         waitForExpectations(timeout: 60, handler: nil)
         XCTAssertNotNil(api.response?.error)
+        XCTAssertEqual(api.response?.statusCode, 503)
         
-        var api2 = TestAPI(with: urlString)
+        let urlString2 = "https://httpbin.org/status/504"
+        var api2 = TestAPI(with: urlString2)
         api2 = api2.setMethod(method: .DELETE).sync()
         XCTAssertNotNil(api2.response?.error)
-        
+        XCTAssertEqual(api2.response?.statusCode, 504)
+
     }
 
 //    func testPerformanceExample() throws {
