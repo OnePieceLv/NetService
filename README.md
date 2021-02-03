@@ -2,7 +2,7 @@
     <img src="https://raw.githubusercontent.com/OnePieceLv/NetService/main/images/logo.png" alt="NetService" title="NetService">
 </p>
 
-NetService is an lightweight and pure Swift implemented HTTP library for request / download / upload from network. This project is inspired by the popular [Alamofire](https://github.com/Alamofire/Alamofire) and [AFNetworking](https://github.com/AFNetworking/AFNetworking)。Although this project is also built on the [URL Loading System](https://developer.apple.com/documentation/foundation/url_loading_system), but they are fundamentally different。Both the design concept and the usage
+NetService is an lightweight and pure Swift implemented HTTP library for request / download / upload from network. This project is inspired by the popular [Alamofire](https://github.com/Alamofire/Alamofire) and [AFNetworking](https://github.com/AFNetworking/AFNetworking)。Although this project is also built on the [URL Loading System](https://developer.apple.com/documentation/foundation/url_loading_system), but there are fundamentally different between this project and Alamofire/AFNetworking。Both the design concept and the usage
 
 - [Features](#features)
 - [Requirements](#requirements)
