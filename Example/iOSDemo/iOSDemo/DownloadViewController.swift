@@ -8,17 +8,17 @@
 import UIKit
 import NetService
 
-final class DownloadAPI: BaseDownloadService, NetServiceProtocol {
-    
-    var urlString: String {
+final class DownloadAPI: BaseDownloadManager {
+
+    override var urlString: String {
         return _urlString
     }
     
-    func httpParameters() -> [String : Any] {
+    override func httpParameters() -> [String : Any] {
         return _parameters
     }
     
-    func httpHeaders() -> [String : String] {
+    override func httpHeaders() -> [String : String] {
         return _headers
     }
         

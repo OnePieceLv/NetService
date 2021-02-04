@@ -74,17 +74,17 @@ class HomeTableViewController: UITableViewController {
                 )
             ],
             .upload: [
-//                RequestContent(
-//                    name: "UploadWithData",
-//                    url: "", method: "POST",
-//                    identifier: "UploadSegue",
-//                    action: { (navigation) in
-//                        let main = UIStoryboard.init(name: "Main", bundle: nil)
-//                        let controller = main.instantiateViewController(identifier: "UploadViewController") as? UploadViewController
-//                        controller?.uploadType = .data
-//                        navigation?.show(controller!, sender: navigation)
-//                    }
-//                ),
+                RequestContent(
+                    name: "UploadWithData",
+                    url: "", method: "POST",
+                    identifier: "UploadSegue",
+                    action: { (navigation) in
+                        let main = UIStoryboard.init(name: "Main", bundle: nil)
+                        let controller = main.instantiateViewController(identifier: "UploadViewController") as? UploadViewController
+                        controller?.uploadType = .data
+                        navigation?.show(controller!, sender: navigation)
+                    }
+                ),
                 RequestContent(
                     name: "UploadWithMultipart",
                     url: "",

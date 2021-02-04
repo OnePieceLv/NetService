@@ -8,67 +8,26 @@
 import UIKit
 import NetService
 
-class DataAPI: BaseDataService, NetServiceProtocol {
+class DataAPI: BaseAPIManager {
     
-    var urlString: String {
+    
+    override var urlString: String {
         return _urlString
         
     }
     
-    var httpMethod: NetBuilders.Method {
+    override var httpMethod: NetServiceBuilder.Method {
         return _method
     }
-    
+        
     private var _urlString: String
-    private var _method: NetBuilders.Method
+    private var _method: NetServiceBuilder.Method
     
-    init(with url: String, method: NetBuilders.Method) {
+    init(with url: String, method: NetServiceBuilder.Method) {
         _urlString = url
         _method = method
+        super.init()
     }
-}
-
-struct TestRetryPolicy: RetryPolicyProtocol {
-    
-    public var retryCount: Int {
-        return 3
-    }
-    
-    public var timeDelay: TimeInterval = 0.0
-    
-    public func retry(_ request: Retryable, with error: Error, completion: RequestRetryCompletion) {
-        var service = request
-        if request.retryCount < retryCount {
-            completion(true, timeDelay)
-            service.prepareRetry()
-        } else {
-            completion(false, timeDelay)
-            service.resetRetry()
-        }
-    }
-}
-
-class TestMiddleware: Middleware {
-    
-    func afterReceive<Response>(_ result: Response) -> Response where Response : Responseable {
-        print(result.response)
-        return result
-    }
-    
-    
-    func prepare(_ builder: RequestBuilder) -> RequestBuilder {
-        return builder
-    }
-    func beforeSend<TaskType>(_ request: TaskType) where TaskType : APIService {
-        
-    }
-    
-    func didStop<TaskType>(_ request: TaskType) where TaskType : APIService {
-        
-    }
-    
-    
-    
 }
 
 class DataServiceViewController: UITableViewController {
@@ -77,7 +36,7 @@ class DataServiceViewController: UITableViewController {
     
     var url: String = ""
     
-    var method: NetBuilders.Method = .GET
+    var method: NetServiceBuilder.Method = .GET
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -8,13 +8,13 @@
 import UIKit
 import NetService
 
-final class UploadAPI: BaseUploadService, NetServiceProtocol {
+final class UploadAPI: BaseUploadManager {
     
-    var urlString: String {
+    override var urlString: String {
         return _urlString
     }
     
-    var httpMethod: NetBuilders.Method {
+    override var httpMethod: NetServiceBuilder.Method {
         return .POST
     }
     
@@ -102,7 +102,9 @@ class UploadViewController: UIViewController {
         isInMemoryThreshold: fromDisk ? 0 : 100_00_00_00,
         progress: { (progress) in
             uploadProgressValues.append(progress.fractionCompleted)
-            self.progressView.observedProgress = progress
+//            self.progressView.observedProgress = progress
+            print(progress.fractionCompleted)
+            self.progressView.progress = Float(progress.fractionCompleted)
         }) { (request) in
             let response = request.response?.response
             self.bodyShow.text = response?.description
@@ -123,7 +125,8 @@ class UploadViewController: UIViewController {
         var uploadProgressValues: [Double] = []
 
         UploadAPI(with: urlString).upload(data: data) { (progress) in
-            self.progressView.observedProgress = progress
+//            self.progressView.observedProgress = progress
+            self.progressView.progress = Float(progress.fractionCompleted)
             uploadProgressValues.append(progress.fractionCompleted)
         } completion: { (request) in
             let response = request.response?.response

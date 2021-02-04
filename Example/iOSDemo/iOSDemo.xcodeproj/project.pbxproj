@@ -16,6 +16,7 @@
 		B034B0C525C3245C005187C4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B034B0C325C3245C005187C4 /* LaunchScreen.storyboard */; };
 		B034B0D025C3245D005187C4 /* iOSDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034B0CF25C3245D005187C4 /* iOSDemoTests.swift */; };
 		B034B0DB25C3245D005187C4 /* iOSDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034B0DA25C3245D005187C4 /* iOSDemoUITests.swift */; };
+		B05EC3BD25CBE5C700323ECC /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05EC3BC25CBE5C700323ECC /* APIManager.swift */; };
 		B095987A25CA731500C9F563 /* HomeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B095987925CA731500C9F563 /* HomeTableViewController.swift */; };
 		B095988525CA8F0400C9F563 /* DownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B095988425CA8F0400C9F563 /* DownloadViewController.swift */; };
 		B095988A25CA8F1700C9F563 /* UploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B095988925CA8F1700C9F563 /* UploadViewController.swift */; };
@@ -60,6 +61,7 @@
 		B034B0D625C3245D005187C4 /* iOSDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B034B0DA25C3245D005187C4 /* iOSDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSDemoUITests.swift; sourceTree = "<group>"; };
 		B034B0DC25C3245D005187C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B05EC3BC25CBE5C700323ECC /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		B095987925CA731500C9F563 /* HomeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewController.swift; sourceTree = "<group>"; };
 		B095988425CA8F0400C9F563 /* DownloadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewController.swift; sourceTree = "<group>"; };
 		B095988925CA8F1700C9F563 /* UploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadViewController.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				B095987925CA731500C9F563 /* HomeTableViewController.swift */,
 				B095988425CA8F0400C9F563 /* DownloadViewController.swift */,
 				B095988925CA8F1700C9F563 /* UploadViewController.swift */,
+				B05EC3BC25CBE5C700323ECC /* APIManager.swift */,
 				B034B0BE25C3245B005187C4 /* Main.storyboard */,
 				B034B0C125C3245C005187C4 /* Assets.xcassets */,
 				B034B0C325C3245C005187C4 /* LaunchScreen.storyboard */,
@@ -390,6 +393,7 @@
 				B034B0BB25C3245B005187C4 /* SceneDelegate.swift in Sources */,
 				B095988525CA8F0400C9F563 /* DownloadViewController.swift in Sources */,
 				B095987A25CA731500C9F563 /* HomeTableViewController.swift in Sources */,
+				B05EC3BD25CBE5C700323ECC /* APIManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
