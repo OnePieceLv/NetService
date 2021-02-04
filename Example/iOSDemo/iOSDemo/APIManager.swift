@@ -140,13 +140,7 @@ class TestMiddleware: Middleware {
     func prepare(_ builder: NetServiceBuilder) -> NetServiceBuilder {
         return builder
     }
-    func beforeSend<TaskType>(_ request: TaskType) where TaskType : NetServiceProtocol {
-        
-    }
     
-    func didStop<TaskType>(_ request: TaskType) where TaskType : NetServiceProtocol {
-        
-    }
 }
 
 struct TestRetryPolicy: RetryPolicyProtocol {
