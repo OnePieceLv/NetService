@@ -113,7 +113,7 @@ class BaseDataServiceTests: BaseTestCase {
 
     }
     
-    class CustomMiddlewares: Middleware {
+    struct CustomMiddlewares: Middleware {
         func prepare(_ builder: NetServiceBuilder) -> NetServiceBuilder {
             XCTAssertEqual(builder.url?.absoluteString, "https://httpbin.org/get")
             XCTAssertEqual(builder.httpMethod, .GET)

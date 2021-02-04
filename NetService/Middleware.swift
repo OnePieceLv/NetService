@@ -17,7 +17,7 @@ public protocol Middleware {
     func didStop<TaskType: NetServiceProtocol>(_ request: TaskType) -> Void
 }
 
-extension Middleware {
+public extension Middleware {
     func prepare(_ builder: NetServiceBuilder) -> NetServiceBuilder { builder }
     
     func beforeSend<TaskType: NetServiceProtocol>(_ request: TaskType) -> Void {}
