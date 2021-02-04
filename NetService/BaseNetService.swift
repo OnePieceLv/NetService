@@ -157,29 +157,29 @@ public struct NetServiceRequest {
 }
 
 
-extension NetServiceRequest: CustomStringConvertible, CustomDebugStringConvertible {
-    public var description: String {
-        return self.debugDescription
-    }
-    
-    public var debugDescription: String {
-        var custom = "\r\n"
-        var credential = "none"
-        if let cre = self.userCredential {
-            credential = "user: \(String(describing: cre.user)), password: \(String(describing: cre.password)), haspassword: \(cre.hasPassword), certificates: \(cre.certificates)"
-        }
-        if let api = (self as? NetServiceRequestProtocol) {
-            custom += "[Parameters: ] \(api.httpParameters())" + "\r\n"
-            custom += "[Headers: ] \(self.builder.headers)" + "\r\n"
-            custom += "[Authorization: ] \(api.authorization.description)" + "\r\n"
-            custom += "[Method: ] \(api.httpMethod)" + "\r\n"
-            custom += "[URL: ] \(api.urlString)" + "\r\n"
-            custom += "[Credential: ] \(credential)" + "\r\n"
-            custom += "\r\n"
-        }
-        return (custom)
-    }
-}
+//extension NetServiceRequest: CustomStringConvertible, CustomDebugStringConvertible {
+//    public var description: String {
+//        return self.debugDescription
+//    }
+//
+//    public var debugDescription: String {
+//        var custom = "\r\n"
+//        var credential = "none"
+//        if let cre = self.userCredential {
+//            credential = "user: \(String(describing: cre.user)), password: \(String(describing: cre.password)), haspassword: \(cre.hasPassword), certificates: \(cre.certificates)"
+//        }
+//        if let api = (self as? NetServiceRequestProtocol) {
+//            custom += "[Parameters: ] \(api.httpParameters())" + "\r\n"
+//            custom += "[Headers: ] \(self.builder.headers)" + "\r\n"
+//            custom += "[Authorization: ] \(api.authorization.description)" + "\r\n"
+//            custom += "[Method: ] \(api.httpMethod)" + "\r\n"
+//            custom += "[URL: ] \(api.urlString)" + "\r\n"
+//            custom += "[Credential: ] \(credential)" + "\r\n"
+//            custom += "\r\n"
+//        }
+//        return (custom)
+//    }
+//}
 
 open class DataNetService: NSObject, NetServiceProtocol {
     
