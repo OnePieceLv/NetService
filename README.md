@@ -32,7 +32,7 @@ NetService is an lightweight and pure Swift implemented HTTP library for request
 
 # Installation
 ```ruby
-pod 'NetService', '~> 1.0'
+pod 'NetService', '~> 1.0.1'
 ```
 
 # 🐒 Usage

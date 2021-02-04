@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "NetService"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "NetService is an HTTP client library written in Swift."
   s.homepage     = "https://github.com/OnePieceLv/NetService"
   s.license      = {:type =>"MIT", :file => "LICENSE"}

@@ -172,7 +172,7 @@
 		B034AF6325C2AC30005187C4 /* BaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestCase.swift; sourceTree = "<group>"; };
 		B034AFCD25C2EFEB005187C4 /* NetService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B034AFD525C2EFEB005187C4 /* NetService macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NetService macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B034B05425C31AA8005187C4 /* NetService.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NetService.podspec; sourceTree = "<group>"; };
+		B034B05425C31AA8005187C4 /* NetService.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NetService.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B034B05525C31AA8005187C4 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B034B05D25C31B35005187C4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B057004F25C9B4D100D73456 /* NetServiceDataStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetServiceDataStruct.swift; sourceTree = "<group>"; };
@@ -888,7 +888,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.nengxuehui.NetService;
 				PRODUCT_NAME = NetService;
 				SKIP_INSTALL = YES;
@@ -916,7 +916,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.nengxuehui.NetService;
 				PRODUCT_NAME = NetService;
 				SKIP_INSTALL = YES;
@@ -982,7 +982,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.nengxuehui.NetService;
 				PRODUCT_NAME = NetService;
 				SDKROOT = macosx;
@@ -1010,7 +1010,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = cn.nengxuehui.NetService;
 				PRODUCT_NAME = NetService;
 				SDKROOT = macosx;
