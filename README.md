@@ -3,8 +3,7 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/OnePieceLv/NetService/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/OnePieceLv/
-    NetService"></a>
+    <a href="https://github.com/OnePieceLv/NetService/blob/main/LICENSE"><img alt="Cocoapods" src="https://img.shields.io/cocoapods/l/NetService?color=green"></a>
     <a href="https://cocoapods.org/pods/NetService"><img alt="Cocoapods" src="https://img.shields.io/cocoapods/v/NetService"></a>
     <img alt="Cocoapods platforms" src="https://img.shields.io/cocoapods/p/NetService">
     <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/onePiecelv/NetService">
