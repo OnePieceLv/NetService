@@ -6,7 +6,7 @@
     <a href="https://github.com/OnePieceLv/NetService/blob/main/LICENSE"><img alt="Cocoapods" src="https://img.shields.io/cocoapods/l/NetService?color=green"></a>
     <a href="https://cocoapods.org/pods/NetService"><img alt="Cocoapods" src="https://img.shields.io/cocoapods/v/NetService"></a>
     <img alt="Cocoapods platforms" src="https://img.shields.io/cocoapods/p/NetService">
-    <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/onePiecelv/NetService">
+    <a href="https://swift.org"><img alt="swift 5" src="https://img.shields.io/badge/swift-5-important"></a>
 </p>
 
 NetService is an lightweight and pure Swift implemented HTTP library for request / download / upload from network. This project is inspired by the popular [Alamofire](https://github.com/Alamofire/Alamofire) and [AFNetworking](https://github.com/AFNetworking/AFNetworking)。Although this project is also built on the [URL Loading System](https://developer.apple.com/documentation/foundation/url_loading_system), but there are fundamentally different between this project and Alamofire/AFNetworking。Both the design concept and the usage
