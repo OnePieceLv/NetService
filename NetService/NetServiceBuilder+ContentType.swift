@@ -8,13 +8,13 @@
 
 import Foundation
 
-extension NetBuilders {
+extension NetServiceBuilder {
     public enum ContentType: Hashable {
         case aac, avi, bin, bmp, csv, form, formURL, gif, html, ico, ics, jpeg, js, json, mpeg, mpkg, ogx, pdf, pkcs7, plist, png, rar, rtf, svg, tar, tiff, ttf, txt, wav, weba, webm, webp, wildcard, xhtml, xml, zip, custom(String)
     }
 }
 
-extension NetBuilders.ContentType: RawRepresentable {
+extension NetServiceBuilder.ContentType: RawRepresentable {
 
     private struct StringValue {
         static let aac = "audio/aac"

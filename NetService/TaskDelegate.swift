@@ -10,17 +10,6 @@ import Foundation
 typealias ProgressClosure = (Progress) -> Void
 typealias CompletionClosure = ((_ result: TaskResult) -> Void)
 
-public struct TaskResult {
-    let data: Data?
-    let downloadFileURL: URL?
-    let resumeData: Data?
-    let response: HTTPURLResponse?
-    let error: Error?
-    let task: URLSessionTask
-    let metrics: URLSessionTaskMetrics?
-}
-
-
 class TaskDelegate: NSObject, Retryable {
     
     var error: Error?
@@ -49,11 +38,13 @@ class TaskDelegate: NSObject, Retryable {
     private let lock: NSLock = NSLock()
     
     private var _task: URLSessionTask? {
-        didSet { reset() }
+        didSet {
+            reset()
+        }
     }
     
-    // Retryable
-//    weak var retryRequest: (APIService & Retryable)?
+    // MARK: - Retryable
+    
     var retryCount: Int = 0
 
     func prepareRetry() {

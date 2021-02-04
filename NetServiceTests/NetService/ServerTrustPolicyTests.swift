@@ -132,10 +132,10 @@ class ServerTrustPolicyTests: BaseTestCase {
     
     private let expiredHost = "expired.badssl.com"
     
-    final class ExpiredCertificateAPI: BaseDataService, NetServiceProtocol {
+    final class ExpiredCertificateAPI: BaseAPIManager {
         private let expiredURLString = "https://expired.badssl.com/"
         
-        var urlString: String {
+        override var urlString: String {
             return expiredURLString
         }
     }

@@ -7,13 +7,13 @@
 
 import Foundation
 
-extension NetBuilders {
+extension NetServiceBuilder {
     public enum Authorization: Hashable {
         case none, basic(user: String, password: String), bearer(token: String), custom(String)
     }
 }
 
-extension NetBuilders.Authorization: RawRepresentable {
+extension NetServiceBuilder.Authorization: RawRepresentable {
 
     private struct StringValue {
         static let basic = "Basic "
@@ -55,7 +55,7 @@ extension NetBuilders.Authorization: RawRepresentable {
 
 }
 
-extension NetBuilders.Authorization: CustomStringConvertible, CustomDebugStringConvertible {
+extension NetServiceBuilder.Authorization: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {
         return self.debugDescription
     }

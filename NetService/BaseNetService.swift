@@ -8,11 +8,11 @@
 import Foundation
 
 
-public protocol APIService: AnyObject {
-    var apiService: BaseAPIService { get set }
+public protocol NetServiceProtocol: AnyObject {
+    var baseService: NetServiceRequest { get set }
     var middlewares: [Middleware] { get set }
     var retryPolicy: RetryPolicyProtocol? { get set }
-    var state: NetBuilders.State { get }
+    var state: NetServiceBuilder.State { get }
     var task: URLSessionTask? { get set }
     var originalRequest: URLRequest? { get }
     var currentRequest: URLRequest? { get }
@@ -22,23 +22,23 @@ public protocol APIService: AnyObject {
     func suspend() -> Void
 }
 
-public extension APIService {
+public extension NetServiceProtocol {
 
-    var state: NetBuilders.State {
-        apiService.state
+    var state: NetServiceBuilder.State {
+        baseService.state
     }
 
     var task: URLSessionTask? {
-        get { apiService.task }
-        set { apiService.task = newValue}
+        get { baseService.task }
+        set { baseService.task = newValue}
     }
 
     var originalRequest: URLRequest? {
-        apiService.originalRequest
+        baseService.originalRequest
     }
 
     var currentRequest: URLRequest? {
-        apiService.currentRequest
+        baseService.currentRequest
     }
 
     func suspend() -> Void {
@@ -59,7 +59,7 @@ public extension APIService {
     
 }
 
-extension APIService {
+extension NetServiceProtocol {
     
     func resume(task: URLSessionTask?) -> Void {
         self.task = task
@@ -71,8 +71,8 @@ extension APIService {
         task.resume()
     }
     
-    func prepareRequest(api: APIService) throws -> URLRequest {
-         try apiService.prepareRequest(api: api)
+    func prepareRequest(api: NetServiceProtocol) throws -> URLRequest {
+         try baseService.prepareRequest(api: api)
     }
     
     func addRequest(task: URLSessionTask) -> Void {
@@ -99,9 +99,9 @@ extension APIService {
     }
 }
 
-public class BaseAPIService {
+public struct NetServiceRequest {
     
-    var state: NetBuilders.State {
+    var state: NetServiceBuilder.State {
         return task?.apiState ?? .waitingForConnectivity
     }
     
@@ -124,22 +124,22 @@ public class BaseAPIService {
     
     private var _task: URLSessionTask?
     
-    fileprivate var builder: RequestBuilder = RequestBuilder()
+    fileprivate var builder: NetServiceBuilder = NetServiceBuilder()
     
-    private func conformance(api: APIService) throws -> (NetServiceProtocol & APIService) {
-        if let netServiceAPI = api as? (NetServiceProtocol & APIService) {
+    private func conformance(api: NetServiceProtocol) throws -> (NetServiceRequestProtocol & NetServiceProtocol) {
+        if let netServiceAPI = api as? (NetServiceRequestProtocol & NetServiceProtocol) {
             return netServiceAPI
         }
         throw APIError.customFailure(message: "Must be conformance APIRequestConvertible protocol")
     }
     
-    private func authenticate(using credential: URLCredential) -> Void {
+    private mutating func authenticate(using credential: URLCredential) -> Void {
         self.userCredential = credential
     }
     
-    func prepareRequest(api: APIService) throws -> URLRequest {
+    mutating func prepareRequest(api: NetServiceProtocol) throws -> URLRequest {
         let api = try conformance(api: api)
-        var builderObj = RequestBuilder(urlString: api.urlString)
+        var builderObj = NetServiceBuilder(urlString: api.urlString)
         builderObj.headers.merge(api.httpHeaders()) { (_, new) in new }
         builderObj.httpMethod = api.httpMethod
         builderObj.timeout = api.timeout
@@ -157,7 +157,7 @@ public class BaseAPIService {
 }
 
 
-extension BaseAPIService: CustomStringConvertible, CustomDebugStringConvertible {
+extension NetServiceRequest: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {
         return self.debugDescription
     }
@@ -168,7 +168,7 @@ extension BaseAPIService: CustomStringConvertible, CustomDebugStringConvertible 
         if let cre = self.userCredential {
             credential = "user: \(String(describing: cre.user)), password: \(String(describing: cre.password)), haspassword: \(cre.hasPassword), certificates: \(cre.certificates)"
         }
-        if let api = (self as? NetServiceProtocol) {
+        if let api = (self as? NetServiceRequestProtocol) {
             custom += "[Parameters: ] \(api.httpParameters())" + "\r\n"
             custom += "[Headers: ] \(self.builder.headers)" + "\r\n"
             custom += "[Authorization: ] \(api.authorization.description)" + "\r\n"
@@ -181,7 +181,7 @@ extension BaseAPIService: CustomStringConvertible, CustomDebugStringConvertible 
     }
 }
 
-open class BaseDataService: NSObject, APIService {
+open class DataNetService: NSObject, NetServiceProtocol {
     
     open var middlewares: [Middleware] = []
     
@@ -192,7 +192,7 @@ open class BaseDataService: NSObject, APIService {
     
     public var completionClosure: (() -> Void)?
 
-    public var apiService: BaseAPIService = BaseAPIService()
+    public var baseService: NetServiceRequest = NetServiceRequest()
         
     public var error: Error? {
         return response?.error
@@ -224,7 +224,7 @@ open class BaseDataService: NSObject, APIService {
 }
 
 // MARK: - start request
-public extension BaseDataService {
+public extension DataNetService {
     
     /// set progress
     func progress(progressClosure: @escaping (Progress) -> Void) -> Self {
@@ -232,7 +232,7 @@ public extension BaseDataService {
         return self
     }
     
-    func async(service: Service = ServiceAgent.shared, completion: @escaping (_ request: BaseDataService) -> Void) -> Void {
+    func async(service: Service = ServiceAgent.shared, completion: @escaping (_ request: DataNetService) -> Void) -> Void {
         self.completionClosure = { [weak self] in
             guard let `self` = self else { return }
             DispatchQueue.main.async { completion(self) }
@@ -246,7 +246,7 @@ public extension BaseDataService {
             fatalError("URLRequest is missing")
         }
         self.requestType = .request(urlRequest)
-        let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
+        let parameter = URLSessionParameter(credential: baseService.userCredential, retryPolicy: self.retryPolicy)
         let task = service.data(with: urlRequest,
                                 parameter: parameter,
                                 uploadProgress: nil,
@@ -269,7 +269,7 @@ public extension BaseDataService {
         }
         self.requestType = .request(urlRequest)
         let semaphore = DispatchSemaphore(value: 0)
-        let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
+        let parameter = URLSessionParameter(credential: baseService.userCredential, retryPolicy: self.retryPolicy)
         let task = service.data(with: urlRequest,
                                 parameter: parameter,
                                 uploadProgress: nil,
@@ -289,7 +289,7 @@ public extension BaseDataService {
 }
 
 // MARK: - transform
-public extension BaseDataService {
+public extension DataNetService {
     func transform<T: DataTransformProtocol>(with transform: T) throws -> T.TransformObject {
         if let response = self.response {
             return try transform.transform(response)
@@ -299,7 +299,7 @@ public extension BaseDataService {
 }
 
 
-open class BaseDownloadService: NSObject, APIService {
+open class DownloadNetService: NSObject, NetServiceProtocol {
     
     public var middlewares: [Middleware] = []
     
@@ -310,7 +310,7 @@ open class BaseDownloadService: NSObject, APIService {
     
     public var progressHandle: ((Progress) -> Void)?
     
-    public var apiService: BaseAPIService = BaseAPIService()
+    public var baseService: NetServiceRequest = NetServiceRequest()
     
     public var resumeData: Data? {
         get {
@@ -364,13 +364,13 @@ open class BaseDownloadService: NSObject, APIService {
     }
 }
 
-public extension BaseDownloadService {
+public extension DownloadNetService {
     
     func download(resumingWith resumeData: Data,
                   to destination: DestinationClosure? = nil,
                   progress: @escaping (Progress) -> Void,
                   service: Service = ServiceAgent.shared,
-                  completion: @escaping ((_ request: BaseDownloadService) -> Void)
+                  completion: @escaping ((_ request: DownloadNetService) -> Void)
     ) -> Void {
         let downloadable: Downloadable = .resume(resumeData)
         self.download(with: downloadable, progress: progress, destination: destination, service: service, completion: completion)
@@ -380,7 +380,7 @@ public extension BaseDownloadService {
                   to destination: DestinationClosure? = nil,
                   progress: @escaping (Progress) -> Void,
                   service: Service = ServiceAgent.shared,
-                  completion: @escaping ((_ request: BaseDownloadService) -> Void)
+                  completion: @escaping ((_ request: DownloadNetService) -> Void)
     ) -> Void {
         do {
             let data = try Data(contentsOf: resumeURL)
@@ -394,7 +394,7 @@ public extension BaseDownloadService {
     func download(progress: @escaping (Progress) -> Void,
                   to destination: DestinationClosure? = nil,
                   service: Service = ServiceAgent.shared,
-                  completion: @escaping ((_ request: BaseDownloadService) -> Void)
+                  completion: @escaping ((_ request: DownloadNetService) -> Void)
     ) -> Void {
         do {
             let urlRequest = try prepareRequest(api: self)
@@ -409,9 +409,9 @@ public extension BaseDownloadService {
                           progress: @escaping (Progress) -> Void,
                           destination: DestinationClosure?,
                           service: Service,
-                          completion: @escaping ((_ request: BaseDownloadService) -> Void)
+                          completion: @escaping ((_ request: DownloadNetService) -> Void)
     ) -> Void {
-        let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
+        let parameter = URLSessionParameter(credential: baseService.userCredential, retryPolicy: self.retryPolicy)
         self.downloadType = downloadable
         self.completionClosure = {
             DispatchQueue.main.async {
@@ -434,7 +434,7 @@ public extension BaseDownloadService {
     
 }
 
-public extension BaseDownloadService {
+public extension DownloadNetService {
     func transform<T: DownloadTransformProtocol>(with transform: T) throws -> T.TransformObject {
         if let downloadResponse = self.response {
             return try transform.transform(downloadResponse)
@@ -444,7 +444,7 @@ public extension BaseDownloadService {
 }
 
 
-open class BaseUploadService: NSObject, APIService {
+open class UploadNetService: NSObject, NetServiceProtocol {
     
     open var middlewares: [Middleware] = []
     
@@ -455,7 +455,7 @@ open class BaseUploadService: NSObject, APIService {
     
     public var completionClosure: (() -> Void)?
     
-    public var apiService: BaseAPIService = BaseAPIService()
+    public var baseService: NetServiceRequest = NetServiceRequest()
     
     public var response: DataResponse?
     
@@ -504,12 +504,12 @@ open class BaseUploadService: NSObject, APIService {
     }
 }
 
-public extension BaseUploadService {
+public extension UploadNetService {
     
     func upload(data: Data,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
-                completion: @escaping (_ request: BaseUploadService) -> Void
+                completion: @escaping (_ request: UploadNetService) -> Void
     ) -> Void {
         do {
             let request = try prepareRequest(api: self)
@@ -525,7 +525,7 @@ public extension BaseUploadService {
     func upload(file: URL,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
-                completion: @escaping (_ request: BaseUploadService) -> Void
+                completion: @escaping (_ request: UploadNetService) -> Void
     ) -> Void {
         do {
             let request = try prepareRequest(api: self)
@@ -540,11 +540,11 @@ public extension BaseUploadService {
                 contentLength: UInt64,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
-                completion: @escaping (_ request: BaseUploadService) -> Void
+                completion: @escaping (_ request: UploadNetService) -> Void
     ) -> Void {
         do {
             var request = try prepareRequest(api: self)
-            let header: NetBuilders.HTTPHeader = NetBuilders.HTTPHeader.contentLength(contentLength)
+            let header: NetServiceBuilder.HTTPHeader = NetServiceBuilder.HTTPHeader.contentLength(contentLength)
             request.setValue(header.value, forHTTPHeaderField: header.name)
             let upload: Uploadable = .stream(stream, request)
             self.upload(with: upload, progress: closure, completion: completion)
@@ -554,10 +554,10 @@ public extension BaseUploadService {
     }
     
     func upload(multipartformdata: @escaping (MultipartFormData) -> Void,
-                isInMemoryThreshold: UInt64 = BaseUploadService.multipartFormDataEncodingMemoryThreshold,
+                isInMemoryThreshold: UInt64 = UploadNetService.multipartFormDataEncodingMemoryThreshold,
                 progress closure: ((Progress) -> Void)?,
                 service: Service = ServiceAgent.shared,
-                completion: @escaping (_ request: BaseUploadService) -> Void
+                completion: @escaping (_ request: UploadNetService) -> Void
     ) -> Void {
         let formdata = MultipartFormData()
         multipartformdata(formdata)
@@ -575,7 +575,7 @@ public extension BaseUploadService {
     private func upload(with upload: Uploadable,
                         progress closure: ((Progress) -> Void)?,
                         service: Service = ServiceAgent.shared,
-                        completion: @escaping (_ request: BaseUploadService) -> Void
+                        completion: @escaping (_ request: UploadNetService) -> Void
     ) {
         self.uploadProgress = closure
         self.uploadType = upload
@@ -584,7 +584,7 @@ public extension BaseUploadService {
                 completion(self)
             }
         }
-        let parameter = URLSessionParameter(credential: apiService.userCredential, retryPolicy: self.retryPolicy)
+        let parameter = URLSessionParameter(credential: baseService.userCredential, retryPolicy: self.retryPolicy)
         let task = service.upload(with: upload, parameter: parameter, uploadProgress: uploadProgress, downloadProgress: nil) { (response: DataResponse) in
             self.response = self.middlewares.reduce(response) { $1.afterReceive($0) }
             if let completionHandler = self.completionClosure {

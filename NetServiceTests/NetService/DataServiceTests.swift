@@ -8,29 +8,26 @@
 import XCTest
 @testable import NetService
 
-final class TestAPI: BaseDataService, NetServiceProtocol {
-    var parameters: [String : Any] = [:]
-    
-    var headers: [String : String] = [:]
-    
-    var urlString: String {
+final class TestAPI: BaseAPIManager {
+        
+    override var urlString: String {
         return _urlString
         
     }
     
-    var httpMethod: NetBuilders.Method {
+    override var httpMethod: NetServiceBuilder.Method {
         return _method
     }
     
     private var _urlString: String
     
-    private var _method: NetBuilders.Method = .GET
+    private var _method: NetServiceBuilder.Method = .GET
     
     init(with url: String) {
         _urlString = url
     }
     
-    func setMethod(method: NetBuilders.Method) -> Self {
+    func setMethod(method: NetServiceBuilder.Method) -> Self {
         _method = method
         return self
     }
@@ -117,7 +114,7 @@ class BaseDataServiceTests: BaseTestCase {
     }
     
     class CustomMiddlewares: Middleware {
-        func prepare(_ builder: RequestBuilder) -> RequestBuilder {
+        func prepare(_ builder: NetServiceBuilder) -> NetServiceBuilder {
             XCTAssertEqual(builder.url?.absoluteString, "https://httpbin.org/get")
             XCTAssertEqual(builder.httpMethod, .GET)
             return builder

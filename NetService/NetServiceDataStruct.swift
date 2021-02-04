@@ -7,10 +7,10 @@
 
 import Foundation
 
-/// ServiceAgent Callback
+//MARK: - ServiceAgent Callback
 public typealias CompletionResult = (_ response: DataResponse) -> Void
 
-/// download location url
+//MARK: - download location url
 public typealias DestinationClosure = ((_ temporaryURL: URL?, _ response: URLResponse?) -> URL?)
 
 public enum Requestable {
@@ -26,7 +26,7 @@ public enum Requestable {
     }
 }
 
-/// upload type
+//MARK: - upload type
 public enum Uploadable {
     case data(Data, URLRequest)
     case file(URL, URLRequest)
@@ -57,12 +57,12 @@ public enum Uploadable {
     }
 }
 
-/// download type
+// MARK: - download type
 public enum Downloadable {
     case request(URLRequest)
     case resume(Data)
     
-    func task(session: URLSession, queue: DispatchQueue ) -> URLSessionDownloadTask {
+    func task(session: URLSession, queue: DispatchQueue) -> URLSessionDownloadTask {
         let task: URLSessionDownloadTask
         switch self {
         case .request(let urlRequest):
@@ -75,8 +75,18 @@ public enum Downloadable {
 }
 
 
-/// ServiceAgent Parameter
+//MARK: - ServiceAgent Parameter
 public struct URLSessionParameter {
     var credential: URLCredential?
     var retryPolicy: RetryPolicyProtocol?
+}
+
+public struct TaskResult {
+    let data: Data?
+    let downloadFileURL: URL?
+    let resumeData: Data?
+    let response: HTTPURLResponse?
+    let error: Error?
+    let task: URLSessionTask
+    let metrics: URLSessionTaskMetrics?
 }

@@ -8,17 +8,17 @@
 import Foundation
 
 public protocol RequestConvertible: class {
-    func asURLRequest(with httpbuilder: RequestBuilder, parameters: [String: Any]) throws -> URLRequest
+    func asURLRequest(with httpbuilder: NetServiceBuilder, parameters: [String: Any]) throws -> URLRequest
 }
 
-public protocol NetServiceProtocol: RequestConvertible {
+public protocol NetServiceRequestProtocol: RequestConvertible {
     var urlString: String { get }
     
-    var httpMethod: NetBuilders.Method { get }
+    var httpMethod: NetServiceBuilder.Method { get }
     
     var timeout: TimeInterval { get }
     
-    var authorization: NetBuilders.Authorization { get }
+    var authorization: NetServiceBuilder.Authorization { get }
         
     var encoding: ParameterEncoding { get }
     
@@ -28,39 +28,12 @@ public protocol NetServiceProtocol: RequestConvertible {
     
     func httpParameters() -> [String: Any]
             
-    func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder
+    func httpBuilderHelper(builder: NetServiceBuilder) -> NetServiceBuilder
 }
 
-public extension NetServiceProtocol {
-    
-    var urlString: String { "" }
-    
-    var httpMethod: NetBuilders.Method { .GET }
-    
-    var timeout: TimeInterval { 30 }
-    
-    var authorization: NetBuilders.Authorization { .none }
-    
-    var encoding: ParameterEncoding { URLEncoding.default }
-    
-    var credential: URLCredential? {
-        return nil
-    }
-    
-    func httpHeaders() -> [String: String] {
-        return [:]
-    }
-    
-    func httpParameters() -> [String: Any] {
-        return [:]
-    }
-    
-    func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder {
-        let httpBuilder = builder ?? RequestBuilder()
-        return httpBuilder
-    }
+public extension NetServiceRequestProtocol {
 
-    func asURLRequest(with httpbuilder: RequestBuilder, parameters: [String: Any]) throws -> URLRequest {
+    func asURLRequest(with httpbuilder: NetServiceBuilder, parameters: [String: Any]) throws -> URLRequest {
         let builder = httpbuilder
         guard let url = builder.url else {
             throw APIError.missingURL
@@ -76,17 +49,17 @@ public extension NetServiceProtocol {
             request.setValue(headerValue, forHTTPHeaderField: headerField)
         }
         if let accept = builder.accept {
-            request.setValue(accept.rawValue, forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.accept)
+            request.setValue(accept.rawValue, forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.accept)
         }
-        request.setValue(builder.contentType?.rawValue, forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentType)
+        request.setValue(builder.contentType?.rawValue, forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.contentType)
         if let contentLength = builder.contentLength {
-            request.setValue("\(contentLength)", forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentLength)
+            request.setValue("\(contentLength)", forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.contentLength)
         }
-        request.setValue(builder.acceptEncoding?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.acceptEncoding)
-        request.setValue(builder.contentEncoding?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentEncoding)
-        request.setValue(builder.cacheControl?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.cacheControl)
+        request.setValue(builder.acceptEncoding?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.acceptEncoding)
+        request.setValue(builder.contentEncoding?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.contentEncoding)
+        request.setValue(builder.cacheControl?.compactMap({$0.rawValue}).joined(separator: ", "), forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.cacheControl)
         if builder.authorization != .none {
-            request.setValue(builder.authorization.rawValue, forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.authorization)
+            request.setValue(builder.authorization.rawValue, forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.authorization)
         }
         request.httpShouldHandleCookies = builder.handleCookies
         request.httpShouldUsePipelining = builder.usePipelining
@@ -99,8 +72,8 @@ public extension NetServiceProtocol {
 
 extension URLSessionTask {
     
-    var apiState: NetBuilders.State {
-        return NetBuilders.State(rawValue: self.state.rawValue) ?? .waitingForConnectivity
+    var apiState: NetServiceBuilder.State {
+        return NetServiceBuilder.State(rawValue: self.state.rawValue) ?? .waitingForConnectivity
     }
 }
 

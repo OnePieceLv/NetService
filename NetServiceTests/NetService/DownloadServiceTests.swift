@@ -8,17 +8,17 @@
 import XCTest
 @testable import NetService
 
-class DownloadAPI: BaseDownloadService, NetServiceProtocol {
+class DownloadAPI: BaseDownloadManager {
     
-    var urlString: String {
+    override var urlString: String {
         return _urlString
     }
     
-    func httpParameters() -> [String : Any] {
+    override func httpParameters() -> [String : Any] {
         return _parameters
     }
     
-    func httpHeaders() -> [String : String] {
+    override func httpHeaders() -> [String : String] {
         return _headers
     }
         

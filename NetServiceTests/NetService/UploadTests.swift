@@ -8,14 +8,10 @@
 import XCTest
 @testable import NetService
 
-class UploadAPI: BaseUploadService, NetServiceProtocol {
+class UploadAPI: BaseUploadManager {
     
-    var urlString: String {
+    override var urlString: String {
         return _urlString
-    }
-    
-    var httpMethod: NetBuilders.Method {
-        return .POST
     }
     
     var _urlString: String = ""

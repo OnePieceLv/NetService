@@ -7,14 +7,14 @@
 
 import Foundation
 
-extension NetBuilders {
+extension NetServiceBuilder {
     public enum CacheControl: Equatable {
         case maxAge(TimeInterval), maxStale(TimeInterval?), minFresh(TimeInterval), noCache, noStore, noTransform, onlyIfCached, custom(String)
     }
 }
 
 
-extension NetBuilders.CacheControl: RawRepresentable {
+extension NetServiceBuilder.CacheControl: RawRepresentable {
 
     private struct StringValue {
         static let maxAge = "max-age"

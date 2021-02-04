@@ -8,17 +8,17 @@
 import XCTest
 @testable import NetService
 
-final class JSONAPI: BaseDataService, NetServiceProtocol {
+final class JSONAPI: BaseAPIManager {
     
     private var _urlStr: String = "https://httpbin.org/json"
     
-    var urlString: String {
+    override var urlString: String {
         return _urlStr
     }
     
-    func httpBuilderHelper(builder: RequestBuilder?) -> RequestBuilder {
-        var customBuilder = builder ?? RequestBuilder()
-        customBuilder.contentType = NetBuilders.ContentType.json
+    override func httpBuilderHelper(builder: NetServiceBuilder?) -> NetServiceBuilder {
+        var customBuilder = builder ?? NetServiceBuilder()
+        customBuilder.contentType = NetServiceBuilder.ContentType.json
         return customBuilder
     }
 }

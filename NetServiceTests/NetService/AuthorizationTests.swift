@@ -8,23 +8,23 @@
 import XCTest
 @testable import NetService
 
-final class Authenticate: BaseDataService, NetServiceProtocol {
+final class Authenticate: BaseAPIManager {
     
-    var urlString: String {
+    override var urlString: String {
         return _urlString
     }
     
-    var authorization: NetBuilders.Authorization {
+    override var authorization: NetServiceBuilder.Authorization {
         return self._authorization
     }
     
-    var credential: URLCredential? {
+    override var credential: URLCredential? {
         return _useCredential
     }
     
     private var _useCredential: URLCredential?
     
-    private var _authorization: NetBuilders.Authorization = .none
+    private var _authorization: NetServiceBuilder.Authorization = .none
     
     private var _user: String = ""
     private var _password: String = ""

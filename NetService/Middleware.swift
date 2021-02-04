@@ -8,21 +8,21 @@
 import Foundation
 
 public protocol Middleware {
-    func prepare(_ builder: RequestBuilder) -> RequestBuilder
+    func prepare(_ builder: NetServiceBuilder) -> NetServiceBuilder
     
-    func beforeSend<TaskType: APIService>(_ request: TaskType) -> Void
+    func beforeSend<TaskType: NetServiceProtocol>(_ request: TaskType) -> Void
     
     func afterReceive<Response: Responseable>(_ result: Response) -> Response
     
-    func didStop<TaskType: APIService>(_ request: TaskType) -> Void
+    func didStop<TaskType: NetServiceProtocol>(_ request: TaskType) -> Void
 }
 
 extension Middleware {
-    func prepare(_ builder: RequestBuilder) -> RequestBuilder { builder }
+    func prepare(_ builder: NetServiceBuilder) -> NetServiceBuilder { builder }
     
-    func beforeSend<TaskType: APIService>(_ request: TaskType) -> Void {}
+    func beforeSend<TaskType: NetServiceProtocol>(_ request: TaskType) -> Void {}
     
     func afterReceive<Response: Responseable>(_ result: Response) -> Response { result }
 
-    func didStop<TaskType: APIService>(_ request: TaskType) -> Void {}
+    func didStop<TaskType: NetServiceProtocol>(_ request: TaskType) -> Void {}
 }

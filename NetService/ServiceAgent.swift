@@ -13,7 +13,7 @@ public protocol Service: AnyObject {
     
     var isInBackgroundSession: Bool { get }
     
-    subscript(_ task: URLSessionTask) -> APIService? { get set }
+    subscript(_ task: URLSessionTask) -> NetServiceProtocol? { get set }
     
     func data(with request: URLRequest,
               parameter: URLSessionParameter,
@@ -42,7 +42,7 @@ public final class ServiceAgent: NSObject {
     
     var manager: URLSessionManager
     
-    private var requestMap: [Int: APIService] = [:]
+    private var requestMap: [Int: NetServiceProtocol] = [:]
 
     private var lock: NSLock = NSLock()
     
@@ -50,7 +50,7 @@ public final class ServiceAgent: NSObject {
     
     private override init() {
         let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = NetBuilders.HTTPHeader.defaultFields
+        configuration.httpAdditionalHeaders = NetServiceBuilder.HTTPHeader.defaultFields
         if #available(iOS 11.0, *) {
             configuration.waitsForConnectivity = true
         }
@@ -62,7 +62,7 @@ public final class ServiceAgent: NSObject {
     
     public init(configurate: ((_ configuration: URLSessionConfiguration) -> URLSessionConfiguration)? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil) {
         var configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = NetBuilders.HTTPHeader.defaultFields
+        configuration.httpAdditionalHeaders = NetServiceBuilder.HTTPHeader.defaultFields
         if #available(iOS 11.0, *) {
             configuration.waitsForConnectivity = true
         }
@@ -88,7 +88,7 @@ extension ServiceAgent: Service {
     public static let shared: Service = {
         let client = ServiceAgent { (configuration) -> URLSessionConfiguration in
             let config = configuration
-            config.httpAdditionalHeaders = NetBuilders.HTTPHeader.defaultFields
+            config.httpAdditionalHeaders = NetServiceBuilder.HTTPHeader.defaultFields
             config.allowsCellularAccess = true
             if #available(iOS 11.0, *) {
                 configuration.waitsForConnectivity = true
@@ -98,7 +98,7 @@ extension ServiceAgent: Service {
         return client
     }()
     
-    public subscript(task: URLSessionTask) -> APIService? {
+    public subscript(task: URLSessionTask) -> NetServiceProtocol? {
         get {
             lock.lock()
             defer { lock.unlock() }

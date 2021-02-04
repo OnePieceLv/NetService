@@ -18,9 +18,9 @@ public struct URLEncoding: ParameterEncoding {
         case queryString
         case httpBody
         
-        func encodesParametersInURL(for method: NetBuilders.Method) -> Bool {
+        func encodesParametersInURL(for method: NetServiceBuilder.Method) -> Bool {
             switch self {
-            case .methodDependent: return [NetBuilders.Method.GET, NetBuilders.Method.HEAD, NetBuilders.Method.DELETE].contains(method)
+            case .methodDependent: return [NetServiceBuilder.Method.GET, NetServiceBuilder.Method.HEAD, NetServiceBuilder.Method.DELETE].contains(method)
             case .queryString: return true
             case .httpBody: return false
             }
@@ -51,7 +51,7 @@ public struct URLEncoding: ParameterEncoding {
         guard let method = apiRequest.httpMethod else {
             throw APIError.parameterEncodingFailed(reason: APIError.ParameterEncodingFailureReason.missingMethod)
         }
-        let httpMethod = NetBuilders.Method.init(rawValue: method) ?? NetBuilders.Method.GET
+        let httpMethod = NetServiceBuilder.Method.init(rawValue: method) ?? NetServiceBuilder.Method.GET
         if destination.encodesParametersInURL(for: httpMethod) {
             if var components = URLComponents(url: url, resolvingAgainstBaseURL: false), !urlParameters.isEmpty {
                 let percentEncodedQuery = query(urlParameters)
@@ -61,12 +61,12 @@ public struct URLEncoding: ParameterEncoding {
                 }
             }
         } else {
-            let contentType = NetBuilders.HTTPHeader.contentType(NetBuilders.ContentType.formURL.rawValue)
+            let contentType = NetServiceBuilder.HTTPHeader.contentType(NetServiceBuilder.ContentType.formURL.rawValue)
             apiRequest.setValue(contentType.value, forHTTPHeaderField: contentType.name)
             apiRequest.httpBody = query(urlParameters).data(using: .utf8)
             if let body = apiRequest.httpBody, body.count > 0 {
-                let contentLength = NetBuilders.ContentLength(body.count)
-                apiRequest.setValue("\(contentLength)", forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentLength)
+                let contentLength = NetServiceBuilder.ContentLength(body.count)
+                apiRequest.setValue("\(contentLength)", forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.contentLength)
             }
         }
         return apiRequest
@@ -169,8 +169,8 @@ public struct JSONEncoding: ParameterEncoding {
         var multiRequest = request
         let httpbody = try JSONSerialization.data(withJSONObject: parameters, options: option)
         multiRequest.httpBody = httpbody
-        let contentType: NetBuilders.ContentType = .json
-        multiRequest.setValue(contentType.rawValue, forHTTPHeaderField: NetBuilders.HTTPHeader.HeaderField.contentType)
+        let contentType: NetServiceBuilder.ContentType = .json
+        multiRequest.setValue(contentType.rawValue, forHTTPHeaderField: NetServiceBuilder.HTTPHeader.HeaderField.contentType)
         return request
     }
 }

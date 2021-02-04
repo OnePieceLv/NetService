@@ -7,32 +7,7 @@
 
 import Foundation
 
-public enum NetBuilders {
-    
-    public typealias ContentLength = UInt64
-    
-    public enum CachePolicy: UInt {
-        case useProtocolCachePolicy = 0, reloadIgnoringLocalCacheData = 1, returnCacheDataElseLoad = 2, returnCacheDataDontLoad = 3
-    }
-    
-    public enum ServiceType: UInt {
-        case `default`, voip, video, background, voice, responsiveData = 6, callSignaling = 11
-    }
-    
-    public enum Method: String {
-        case GET, POST, PUT, DELETE, PATCH, UPDATE, HEAD, TRACE, OPTIONS, CONNECT, SEARCH, COPY, MERGE, LABEL, LOCK, UNLOCK, MOVE, MKCOL, PROPFIND, PROPPATCH
-    }
-    
-    public enum ContentEncoding: String, CaseIterable {
-        case gzip, compress, deflate, identity, br
-    }
-    
-    public enum State : Int {
-        case running, suspended, canceling, completed, waitingForConnectivity
-    }
-}
-
-extension NetBuilders {
+extension NetServiceBuilder {
     // MARK: - HTTPHeader
 
     /// A representation of a single HTTP header's name / value pair.
@@ -74,28 +49,28 @@ extension NetBuilders {
     }
 }
 
-extension NetBuilders.HTTPHeader: CustomStringConvertible {
+extension NetServiceBuilder.HTTPHeader: CustomStringConvertible {
     public var description: String {
         "\(name): \(value)"
     }
 }
 
 
-extension NetBuilders.HTTPHeader {
+extension NetServiceBuilder.HTTPHeader {
     /// Returns an `Accept` header.
     ///
     /// - Parameter value: The `Accept` value.
     /// - Returns:         The header.
-    public static func accept(_ value: String) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: HeaderField.accept, value: value)
+    public static func accept(_ value: String) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: HeaderField.accept, value: value)
     }
 
     /// Returns an `Accept-Charset` header.
     ///
     /// - Parameter value: The `Accept-Charset` value.
     /// - Returns:         The header.
-    public static func acceptCharset(_ value: String) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: HeaderField.acceptCharset, value: value)
+    public static func acceptCharset(_ value: String) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: HeaderField.acceptCharset, value: value)
     }
 
     /// Returns an `Accept-Language` header.
@@ -106,8 +81,8 @@ extension NetBuilders.HTTPHeader {
     /// - Parameter value: The `Accept-Language` value.
     ///
     /// - Returns:         The header.
-    public static func acceptLanguage(_ value: String) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: HeaderField.acceptLanguage, value: value)
+    public static func acceptLanguage(_ value: String) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: HeaderField.acceptLanguage, value: value)
     }
 
     /// Returns an `Accept-Encoding` header.
@@ -118,8 +93,8 @@ extension NetBuilders.HTTPHeader {
     /// - Parameter value: The `Accept-Encoding` value.
     ///
     /// - Returns:         The header
-    public static func acceptEncoding(_ value: String) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: HeaderField.acceptEncoding, value: value)
+    public static func acceptEncoding(_ value: String) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: HeaderField.acceptEncoding, value: value)
     }
 
     /// Returns a `Basic` `Authorization` header using the `username` and `password` provided.
@@ -129,11 +104,11 @@ extension NetBuilders.HTTPHeader {
     ///   - password: The password of the header.
     ///
     /// - Returns:    The header.
-    public static func authorization(username: String, password: String) -> NetBuilders.HTTPHeader {
+    public static func authorization(username: String, password: String) -> NetServiceBuilder.HTTPHeader {
 //        let credential = Data("\(username):\(password)".utf8).base64EncodedString()
 
 //        return authorization("Basic \(credential)")
-        return authorization(NetBuilders.Authorization.basic(user: username, password: password).rawValue)
+        return authorization(NetServiceBuilder.Authorization.basic(user: username, password: password).rawValue)
     }
 
     /// Returns a `Bearer` `Authorization` header using the `bearerToken` provided
@@ -141,9 +116,9 @@ extension NetBuilders.HTTPHeader {
     /// - Parameter bearerToken: The bearer token.
     ///
     /// - Returns:               The header.
-    public static func authorization(bearerToken: String) -> NetBuilders.HTTPHeader {
+    public static func authorization(bearerToken: String) -> NetServiceBuilder.HTTPHeader {
 //        authorization("Bearer \(bearerToken)")
-        return authorization(NetBuilders.Authorization.bearer(token: bearerToken).rawValue)
+        return authorization(NetServiceBuilder.Authorization.bearer(token: bearerToken).rawValue)
     }
 
     /// Returns an `Authorization` header.
@@ -155,8 +130,8 @@ extension NetBuilders.HTTPHeader {
     /// - Parameter value: The `Authorization` value.
     ///
     /// - Returns:         The header.
-    public static func authorization(_ value: String) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: HeaderField.authorization, value: value)
+    public static func authorization(_ value: String) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: HeaderField.authorization, value: value)
     }
 
     /// Returns a `Content-Disposition` header.
@@ -164,8 +139,8 @@ extension NetBuilders.HTTPHeader {
     /// - Parameter value: The `Content-Disposition` value.
     ///
     /// - Returns:         The header.
-    public static func contentDisposition(_ value: String) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: "Content-Disposition", value: value)
+    public static func contentDisposition(_ value: String) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: "Content-Disposition", value: value)
     }
 
     /// Returns a `Content-Type` header.
@@ -176,8 +151,8 @@ extension NetBuilders.HTTPHeader {
     /// - Parameter value: The `Content-Type` value.
     ///
     /// - Returns:         The header.
-    public static func contentType(_ value: String) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: HeaderField.contentType, value: value)
+    public static func contentType(_ value: String) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: HeaderField.contentType, value: value)
     }
     
     /// Returns a `Content-Length` header.
@@ -188,8 +163,8 @@ extension NetBuilders.HTTPHeader {
     /// - Parameter value: The `Content-Length` value.
     ///
     /// - Returns:         The header.
-    public static func contentLength(_ value: UInt64) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: HeaderField.contentLength, value: "\(value)")
+    public static func contentLength(_ value: UInt64) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: HeaderField.contentLength, value: "\(value)")
     }
 
     /// Returns a `User-Agent` header.
@@ -197,12 +172,12 @@ extension NetBuilders.HTTPHeader {
     /// - Parameter value: The `User-Agent` value.
     ///
     /// - Returns:         The header.
-    public static func userAgent(_ value: String) -> NetBuilders.HTTPHeader {
-        NetBuilders.HTTPHeader(name: HeaderField.userAgent, value: value)
+    public static func userAgent(_ value: String) -> NetServiceBuilder.HTTPHeader {
+        NetServiceBuilder.HTTPHeader(name: HeaderField.userAgent, value: value)
     }
 }
 
-extension Array where Element == NetBuilders.HTTPHeader {
+extension Array where Element == NetServiceBuilder.HTTPHeader {
     /// Case-insensitively finds the index of an `HTTPHeader` with the provided name, if it exists.
     func index(of name: String) -> Int? {
         let lowercasedName = name.lowercased()
@@ -212,13 +187,13 @@ extension Array where Element == NetBuilders.HTTPHeader {
 
 //// MARK: - Defaults
 //
-extension NetBuilders.HTTPHeader {
+extension NetServiceBuilder.HTTPHeader {
     /// The default set of `HTTPHeaders` used by NetService. Includes `Accept-Encoding`, `Accept-Language`, and
     /// `User-Agent`.
     public static let defaultFields: [String: String] = {
-        let acceptEncoding = NetBuilders.HTTPHeader.defaultAcceptEncoding
-        let acceptLanguage = NetBuilders.HTTPHeader.defaultAcceptLanguage
-        let useragent = NetBuilders.HTTPHeader.defaultUserAgent
+        let acceptEncoding = NetServiceBuilder.HTTPHeader.defaultAcceptEncoding
+        let acceptLanguage = NetServiceBuilder.HTTPHeader.defaultAcceptLanguage
+        let useragent = NetServiceBuilder.HTTPHeader.defaultUserAgent
         return [
             acceptEncoding.name: acceptEncoding.value,
             acceptLanguage.name: acceptLanguage.value,
@@ -227,7 +202,7 @@ extension NetBuilders.HTTPHeader {
     }()
 }
 
-extension NetBuilders.HTTPHeader {
+extension NetServiceBuilder.HTTPHeader {
     
     static let version: String = {
       return "1.0.0"
@@ -236,18 +211,18 @@ extension NetBuilders.HTTPHeader {
     /// versions.
     ///
     /// See the [Accept-Encoding HTTP header documentation](https://tools.ietf.org/html/rfc7230#section-4.2.3) .
-    public static let defaultAcceptEncoding: NetBuilders.HTTPHeader = {
+    public static let defaultAcceptEncoding: NetServiceBuilder.HTTPHeader = {
         let encodings: [String]
         if #available(iOS 11.0, macOS 10.13, tvOS 11.0, watchOS 4.0, *) {
             encodings = [
-                NetBuilders.ContentEncoding.br.rawValue,
-                NetBuilders.ContentEncoding.gzip.rawValue,
-                NetBuilders.ContentEncoding.deflate.rawValue
+                NetServiceBuilder.ContentEncoding.br.rawValue,
+                NetServiceBuilder.ContentEncoding.gzip.rawValue,
+                NetServiceBuilder.ContentEncoding.deflate.rawValue
             ]
         } else {
             encodings = [
-                NetBuilders.ContentEncoding.gzip.rawValue,
-                NetBuilders.ContentEncoding.deflate.rawValue
+                NetServiceBuilder.ContentEncoding.gzip.rawValue,
+                NetServiceBuilder.ContentEncoding.deflate.rawValue
             ]
         }
 
@@ -258,7 +233,7 @@ extension NetBuilders.HTTPHeader {
     /// `preferredLanguages`.
     ///
     /// See the [Accept-Language HTTP header documentation](https://tools.ietf.org/html/rfc7231#section-5.3.5).
-    public static let defaultAcceptLanguage: NetBuilders.HTTPHeader = {
+    public static let defaultAcceptLanguage: NetServiceBuilder.HTTPHeader = {
         .acceptLanguage(Locale.preferredLanguages.prefix(6).qualityEncoded())
     }()
 
@@ -267,7 +242,7 @@ extension NetBuilders.HTTPHeader {
     /// See the [User-Agent header documentation](https://tools.ietf.org/html/rfc7231#section-5.5.3).
     ///
     /// Example: `iOS Example/1.0 (org.netservice.iOS-Example; build:1; iOS 13.0.0) NetService/5.0.0`
-    public static let defaultUserAgent: NetBuilders.HTTPHeader = {
+    public static let defaultUserAgent: NetServiceBuilder.HTTPHeader = {
         let info = Bundle.main.infoDictionary
         let executable = (info?[kCFBundleExecutableKey as String] as? String) ??
             (ProcessInfo.processInfo.arguments.first?.split(separator: "/").last.map(String.init)) ??

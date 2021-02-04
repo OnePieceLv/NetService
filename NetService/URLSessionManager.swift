@@ -164,18 +164,18 @@ extension URLSessionManager {
 
 // MARK: - RetryRequest
 extension URLSessionManager {
-    func retryNewTask(old task: URLSessionTask) -> (APIService?, URLSessionTask?) {
+    func retryNewTask(old task: URLSessionTask) -> (NetServiceProtocol?, URLSessionTask?) {
         var newTask: URLSessionTask?
         guard let request = service?[task] else {
             return (nil, task)
         }
-        if let requestType = (request as? BaseDataService)?.requestType {
+        if let requestType = (request as? DataNetService)?.requestType {
             newTask = requestType.task(session: self.session, queue: self.queue)
         }
-        if let downloadType = (request as? BaseDownloadService)?.downloadType {
+        if let downloadType = (request as? DownloadNetService)?.downloadType {
             newTask = downloadType.task(session: session, queue: queue)
         }
-        if let uploadType = (request as? BaseUploadService)?.uploadType {
+        if let uploadType = (request as? UploadNetService)?.uploadType {
             newTask = uploadType.task(session: session, queue: queue)
         }
         return (request, newTask)
