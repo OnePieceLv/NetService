@@ -85,6 +85,8 @@ final class YourAPI: DataNetService, NetServiceProtocol {
         return _method
     }
     
+    // above code is conforms to NetServiceProtocol protocol
+    
     private var _urlString: String
     
     private var _method: NetBuilders.Method = .GET
@@ -122,28 +124,9 @@ let response = api.sync().response
 ```swift
 
 class DownloadAPI: DownloadNetService, NetServiceRequestProtocol {
+    
     var urlString: String {
         return _urlString
-    }
-    
-    var httpMethod: NetServiceBuilder.Method {
-        return .GET
-    }
-    
-    var timeout: TimeInterval {
-        30
-    }
-    
-    var authorization: NetServiceBuilder.Authorization {
-        return .none
-    }
-    
-    var encoding: ParameterEncoding {
-        return URLEncoding.default
-    }
-    
-    var credential: URLCredential? {
-        return nil
     }
     
     func httpHeaders() -> [String : String] {
@@ -154,9 +137,9 @@ class DownloadAPI: DownloadNetService, NetServiceRequestProtocol {
         return _headers
     }
     
-    func httpBuilderHelper(builder: NetServiceBuilder) -> NetServiceBuilder {
-        return builder
-    }
+    ....
+    
+    // Above Code is conforms to NetServiceRequestProtocol
     
     private var _urlString = ""
     
@@ -192,42 +175,14 @@ DownloadAPI(with: urlString).download(progress: { (progress) in
 ### Request Upload
 ```swift
 class BaseUploadManager: UploadNetService, NetServiceRequestProtocol {
-    
-    var httpMethod: NetServiceBuilder.Method {
-        return .POST
-    }
-    
-    var timeout: TimeInterval {
-        30
-    }
-    
-    var authorization: NetServiceBuilder.Authorization {
-        return .none
-    }
-    
-    var encoding: ParameterEncoding {
-        return URLEncoding.default
-    }
-    
-    var credential: URLCredential? {
-        return nil
-    }
-    
-    func httpHeaders() -> [String : String] {
-        [:]
-    }
-    
-    func httpParameters() -> [String : Any] {
-        [:]
-    }
-    
-    func httpBuilderHelper(builder: NetServiceBuilder) -> NetServiceBuilder {
-        return builder
-    }
+
+   ...  
     
     var urlString: String {
         return _urlString
     }
+    
+    // Above Code is conforms to NetServiceRequestProtocol
     
     var _urlString: String = ""
     
@@ -250,3 +205,6 @@ UploadAPI(with: urlString).upload(file: imageURL) { (progress: Progress) in
 }
 ```
 more usage in example and unit test case
+
+# License
+NetService is released under the MIT license. See [LICENSE](https://github.com/OnePieceLv/NetService/blob/main/LICENSE) for details.
