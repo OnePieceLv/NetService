@@ -9,7 +9,7 @@ First, thank you for considering contributing to NetService! It's people like yo
 We welcome contributions，not only code. you can help with
 
 - [Code Contribute](#code-contribute)
-- [Q&A](#Q&A)
+- [Qestion and Anwser](#Qestion-and-Anwser)
 - [Community](#community)
 - [Marketing](#marketing)
 
@@ -21,7 +21,7 @@ We welcome contributions，not only code. you can help with
 **The most important is to contain tests and description comments.**
 - Code Review: please break down large pull requests into smaller chunks that are easier to review and merge. It's always helpful to have some context for your pull request. What was the purpose? why does it matter to you
 
-## Q&A
+## Qestion and Anwser
 
 If you have any questions, please take a look at the [open issue](https://github.com/OnePieceLv/NetService/issues) first, maybe help you. if you can't find the answer, create an [issue](https://github.com/OnePieceLv/NetService/issues/new)
 You can also reach us at [steven.suzhou@gmail.com](mailto:steven.suzhou@gmail.com)
