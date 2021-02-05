@@ -46,7 +46,35 @@ pod 'NetService', '~> 1.0.2'
 
 ### Request asynchronously
 ```swift
-final class YourAPI: BaseDataService, NetServiceProtocol {
+final class YourAPI: DataNetService, NetServiceProtocol {
+
+    var timeout: TimeInterval {
+        30
+    }
+    
+    var authorization: NetServiceBuilder.Authorization {
+        return .none
+    }
+    
+    var encoding: ParameterEncoding {
+        return URLEncoding.default
+    }
+    
+    var credential: URLCredential? {
+        return nil
+    }
+    
+    func httpHeaders() -> [String : String] {
+        [:]
+    }
+    
+    func httpParameters() -> [String : Any] {
+        [:]
+    }
+    
+    func httpBuilderHelper(builder: NetServiceBuilder) -> NetServiceBuilder {
+        return builder
+    }
     
     var urlString: String {
         return _urlString
@@ -89,3 +117,136 @@ let api = YourAPI(with: urlString)
 let response = api.sync().response
 ...
 ```
+
+### Request Download
+```swift
+
+class DownloadAPI: DownloadNetService, NetServiceRequestProtocol {
+    var urlString: String {
+        return _urlString
+    }
+    
+    var httpMethod: NetServiceBuilder.Method {
+        return .GET
+    }
+    
+    var timeout: TimeInterval {
+        30
+    }
+    
+    var authorization: NetServiceBuilder.Authorization {
+        return .none
+    }
+    
+    var encoding: ParameterEncoding {
+        return URLEncoding.default
+    }
+    
+    var credential: URLCredential? {
+        return nil
+    }
+    
+    func httpHeaders() -> [String : String] {
+        return _parameters
+    }
+    
+    func httpParameters() -> [String : Any] {
+        return _headers
+    }
+    
+    func httpBuilderHelper(builder: NetServiceBuilder) -> NetServiceBuilder {
+        return builder
+    }
+    
+    private var _urlString = ""
+    
+    private var _parameters: [String: Any] = [:]
+    
+    private var _headers: [String: String] = [:]
+    
+    init(with url: String, parameters: [String: Any] = [:]) {
+        _urlString = url
+        _parameters = parameters
+    }
+    
+    init(with url: String, headers: [String: String]) {
+        _urlString = url
+        _headers = headers
+    }
+    
+}
+
+let fielURL = ... // donwload file save url
+let destination: DestinationClosure = {_, _ in fielURL } // config download file position
+let numberOfLines = 100
+let urlString = "https://httpbin.org/stream/\(numberOfLines)"
+let downloadProgresssView: UIProgressView = ....
+DownloadAPI(with: urlString).download(progress: { (progress) in
+   downloadProgresssView.progress = Float(progress.fractionCompleted)
+}, to: destination) { (request) in
+   let downloadFileURL = request.response.downloadFileURL
+   print(downloadFileURL)
+}
+```
+
+### Request Upload
+```swift
+class BaseUploadManager: UploadNetService, NetServiceRequestProtocol {
+    
+    var httpMethod: NetServiceBuilder.Method {
+        return .POST
+    }
+    
+    var timeout: TimeInterval {
+        30
+    }
+    
+    var authorization: NetServiceBuilder.Authorization {
+        return .none
+    }
+    
+    var encoding: ParameterEncoding {
+        return URLEncoding.default
+    }
+    
+    var credential: URLCredential? {
+        return nil
+    }
+    
+    func httpHeaders() -> [String : String] {
+        [:]
+    }
+    
+    func httpParameters() -> [String : Any] {
+        [:]
+    }
+    
+    func httpBuilderHelper(builder: NetServiceBuilder) -> NetServiceBuilder {
+        return builder
+    }
+    
+    var urlString: String {
+        return _urlString
+    }
+    
+    var _urlString: String = ""
+    
+    init(with url: String) {
+        _urlString = url
+    }
+}
+
+let urlString = "https://httpbin.org/post"
+let bundle = Bundle(for: BaseTestCase.self)
+let imageURL = bundle.url(forResource: "rainbow", withExtension: "jpg")!
+let uplodProgressView: UIProgressView = ...
+UploadAPI(with: urlString).upload(file: imageURL) { (progress: Progress) in
+    uplodProgressView.progress = Fload(progress.fractionCompleted)
+} completion: { (request) in
+    res = request.response
+    if let responseString = res?.responseString {
+        print(responseString)
+    }
+}
+```
+more usage in example and unit test case
