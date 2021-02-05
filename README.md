@@ -15,6 +15,7 @@ NetService is an lightweight and pure Swift implemented HTTP library for request
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Contributing](#Want-to-contribute?)
 
 # Features
 - [x] URL / JSON Parameter Encoding
@@ -42,7 +43,7 @@ NetService is an lightweight and pure Swift implemented HTTP library for request
 pod 'NetService', '~> 1.0.2'
 ```
 
-# 🐒 Usage
+# Usage 🐒
 
 ### Request asynchronously
 ```swift
