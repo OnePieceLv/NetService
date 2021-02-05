@@ -9,7 +9,7 @@ First, thank you for considering contributing to NetService! It's people like yo
 We welcome contributions，not only code. you can help with
 
 - [Code Contribute](#code-contribute)
-- [Q&A](#Code)
+- [Q&A](#Q&A)
 - [Community](#community)
 - [Marketing](#marketing)
 
