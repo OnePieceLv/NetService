@@ -30,7 +30,7 @@ NetService is an lightweight and pure Swift implemented HTTP library for request
 - [x] macOS Compatible
 - [x] Default and Custom Cache Controls
 - [x] Default and Custom Content Types
-- [ ] Complete Documentation
+- [x] Usage
 
 # Requirements
 - iOS 10.0+ / macOS 10.15+

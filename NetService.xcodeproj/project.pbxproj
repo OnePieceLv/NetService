@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B027139825CDA36000232698 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = B027139725CDA36000232698 /* CONTRIBUTING.md */; };
+		B027139925CDA36000232698 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = B027139725CDA36000232698 /* CONTRIBUTING.md */; };
 		B034AF1525C2AAA2005187C4 /* NetService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B034AF0B25C2AAA2005187C4 /* NetService.framework */; };
 		B034AF1A25C2AAA2005187C4 /* NetServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B034AF1925C2AAA2005187C4 /* NetServiceTests.swift */; };
 		B034AF1C25C2AAA2005187C4 /* NetService.h in Headers */ = {isa = PBXBuildFile; fileRef = B034AF0E25C2AAA2005187C4 /* NetService.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -141,6 +143,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B027139725CDA36000232698 /* CONTRIBUTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		B034AF0B25C2AAA2005187C4 /* NetService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B034AF0E25C2AAA2005187C4 /* NetService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetService.h; sourceTree = "<group>"; };
 		B034AF0F25C2AAA2005187C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -357,6 +360,7 @@
 		B034B05C25C31B22005187C4 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
+				B027139725CDA36000232698 /* CONTRIBUTING.md */,
 				B034B05D25C31B35005187C4 /* README.md */,
 			);
 			name = Documentation;
@@ -568,6 +572,7 @@
 			files = (
 				B034B05E25C31B35005187C4 /* README.md in Resources */,
 				B034B05725C31AA8005187C4 /* LICENSE in Resources */,
+				B027139825CDA36000232698 /* CONTRIBUTING.md in Resources */,
 				B034B05625C31AA8005187C4 /* NetService.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -608,6 +613,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B027139925CDA36000232698 /* CONTRIBUTING.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
