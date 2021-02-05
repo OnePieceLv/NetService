@@ -15,7 +15,7 @@ NetService is an lightweight and pure Swift implemented HTTP library for request
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#Want-to-contribute?)
+- [Contributing](#contributing)
 
 # Features
 - [x] URL / JSON Parameter Encoding
@@ -43,7 +43,7 @@ NetService is an lightweight and pure Swift implemented HTTP library for request
 pod 'NetService', '~> 1.0.2'
 ```
 
-# Usage 🐒
+# Usage
 
 ### Request asynchronously
 ```swift
@@ -208,6 +208,7 @@ UploadAPI(with: urlString).upload(file: imageURL) { (progress: Progress) in
 more usage in example and unit test case
 
 # Want to contribute?
+## Contributing
 IF you want to contribute, [the Contributing guide is the best place to start(https://github.com/OnePieceLv/NetService/blob/main/CONTRIBUTING.md). If you have questions, feel free to ask.
 
 # License
