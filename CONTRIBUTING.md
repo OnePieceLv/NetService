@@ -32,7 +32,7 @@ presenting the project at meetups, organizing a dedicated meetup for the local c
 
 ## Marketing
 
-writing blog posts, howto's, printing stickers, ...
+writing blog posts, how to's, printing stickers, ...
 
 ## Credits
 
