@@ -1,0 +1,14 @@
+
+Hope you enjoy your new logo, here are the people that
+made your beautiful logo happen :)
+font name: SedgwickAve-Regular
+font link: https://fonts.google.com/specimen/Sedgwick+Ave
+font author: Kevin Burke
+font author site: http://www.blastframe.com/
+
+
+icon designer: George Vasjagin
+icon designer link: /george.vasjagin
+        
+{"bg-gradient-0":"#2F8632","bg-gradient-1":"#BEFF7F","icon":"#ffffff","font":"#ffffff","slogan":"#ffffff"}
+      
