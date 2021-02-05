@@ -209,7 +209,7 @@ more usage in example and unit test case
 
 # Want to contribute?
 ## Contributing
-IF you want to contribute, [the Contributing guide is the best place to start(https://github.com/OnePieceLv/NetService/blob/main/CONTRIBUTING.md). If you have questions, feel free to ask.
+IF you want to contribute, [the Contributing guide is the best place to start](https://github.com/OnePieceLv/NetService/blob/main/CONTRIBUTING.md). If you have questions, feel free to ask.
 
 # License
 NetService is released under the MIT license. See [LICENSE](https://github.com/OnePieceLv/NetService/blob/main/LICENSE) for details.
