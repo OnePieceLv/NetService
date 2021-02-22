@@ -9,6 +9,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "10.0"
   s.osx.deployment_target = "10.15"
   s.source       = { :git => "https://github.com/OnePieceLv/NetService.git", :tag => "#{s.version}" }
-  s.source_files  = "NetService", "NetService/**/*swift"
+  s.source_files  = "NetService", "NetService/**/*.swift"
   s.frameworks = "Foundation"
 end
