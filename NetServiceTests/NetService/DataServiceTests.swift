@@ -137,6 +137,16 @@ class BaseDataServiceTests: BaseTestCase {
         waitForExpectations(timeout: timeout, handler: nil)
 
     }
+    
+    func testBecomeError() throws {
+        let urlString = "http://localhost:3000/"
+        let api = TestAPI(with: urlString)
+        let exception = self.expectation(description: "\(api.urlString)")
+        api.async { (request) in
+            exception.fulfill()
+        }
+        waitForExpectations(timeout: 30, handler: nil)
+    }
 
 //    func testPerformanceExample() throws {
 //        // This is an example of a performance test case.
