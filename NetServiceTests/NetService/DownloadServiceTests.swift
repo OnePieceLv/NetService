@@ -75,22 +75,24 @@ class DownloadServiceTests: BaseTestCase {
         let urlString = "https://httpbin.org/stream/\(numberOfLines)"
         
         let expectation = self.expectation(description: "Download API Should download data to file")
-        var response: DownloadResponse?
+        var response: DownloadResponse!
         
         DownloadAPI(with: urlString).download(progress: { (progress) in
             print(progress.fractionCompleted)
         }, to: destination) { (request) in
             response = request.response
+            XCTAssertEqual(request.statusCode, 200)
+            XCTAssertNil(request.error)
             expectation.fulfill()
         }
         
         waitForExpectations(timeout: timeout, handler: nil)
         // Then
-        XCTAssertNotNil(response?.response)
-        XCTAssertEqual(response?.statusCode, 200)
-        XCTAssertNotNil(response?.downloadFileURL)
-        XCTAssertNil(response?.resumeData)
-        XCTAssertNil(response?.error)
+        XCTAssertNotNil(response.response)
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertNotNil(response.downloadFileURL)
+        XCTAssertNil(response.resumeData)
+        XCTAssertNil(response.error)
         if let downloadFileURL = response?.downloadFileURL {
             print(downloadFileURL)
         }
@@ -101,24 +103,26 @@ class DownloadServiceTests: BaseTestCase {
         let parameters = ["foo": "bar"]
         
         let expectation = self.expectation(description: "Download request should download data to file")
-        var response: DownloadResponse?
+        var response: DownloadResponse!
         DownloadAPI(with: urlString, parameters: parameters).download { (progress) in
             print(progress.completedUnitCount)
         } completion: { (request) in
             response = request.response
+            XCTAssertEqual(request.statusCode, 200)
+            XCTAssertNil(request.error)
             expectation.fulfill()
         }
         
         waitForExpectations(timeout: timeout, handler: nil)
 
         // Then
-        XCTAssertEqual(response?.statusCode, 200)
-        XCTAssertNotNil(response?.response)
-        XCTAssertNotNil(response?.downloadFileURL)
-        XCTAssertNil(response?.resumeData)
-        XCTAssertNil(response?.result.failure)
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertNotNil(response.response)
+        XCTAssertNotNil(response.downloadFileURL)
+        XCTAssertNil(response.resumeData)
+        XCTAssertNil(response.result.failure)
         
-        if let downloadFileURL = response?.downloadFileURL, let data = try? Data(contentsOf: downloadFileURL), let jsonObject = try? JSONSerialization.jsonObject(with: data, options: .allowFragments), let json = jsonObject as? [String: Any], let args = json["args"] as? [String: String] {
+        if let downloadFileURL = response.downloadFileURL, let data = try? Data(contentsOf: downloadFileURL), let jsonObject = try? JSONSerialization.jsonObject(with: data, options: .allowFragments), let json = jsonObject as? [String: Any], let args = json["args"] as? [String: String] {
             XCTAssertEqual(args["foo"], "bar")
         } else {
             XCTFail("args parameter in json should not be nil")
@@ -138,6 +142,8 @@ class DownloadServiceTests: BaseTestCase {
             print(progressValues)
         } completion: { (request) in
             response = request.response
+            XCTAssertEqual(request.statusCode, 200)
+            XCTAssertNil(request.error)
             expectation.fulfill()
         }
         
@@ -171,23 +177,25 @@ class DownloadServiceTests: BaseTestCase {
         
         let expectation = self.expectation(description: "Download request should download data to file: \(fileURL)")
         
-        var response: DownloadResponse?
+        var response: DownloadResponse!
         
         DownloadAPI(with: urlString, headers: headers).download(progress: { (progress) in
             print(progress.completedUnitCount)
         }, to: destination) { (downloadRequest) in
             response = downloadRequest.response
+            XCTAssertEqual(downloadRequest.statusCode, 200)
+            XCTAssertNil(downloadRequest.error)
             expectation.fulfill()
         }
         
         waitForExpectations(timeout: timeout, handler: nil)
         
         // Then
-        XCTAssertNotNil(response?.response)
-        XCTAssertEqual(response?.statusCode, 200)
-        XCTAssertNotNil(response?.downloadFileURL)
-        XCTAssertNil(response?.resumeData)
-        XCTAssertNil(response?.error)
+        XCTAssertNotNil(response.response)
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertNotNil(response.downloadFileURL)
+        XCTAssertNil(response.resumeData)
+        XCTAssertNil(response.error)
 
         if
             let data = try? Data(contentsOf: fileURL),
@@ -215,6 +223,8 @@ class DownloadServiceTests: BaseTestCase {
             }
         } completion: { (downloadRequest) in
             response = downloadRequest.response
+            XCTAssertEqual(downloadRequest.statusCode, 200)
+            XCTAssertNotNil(downloadRequest.error)
             expectation.fulfill()
         }
         

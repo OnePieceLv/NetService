@@ -1,5 +1,5 @@
 PODS:
-  - NetService (1.0.2)
+  - NetService (1.0.3)
 
 DEPENDENCIES:
   - NetService (from `../../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../../"
 
 SPEC CHECKSUMS:
-  NetService: 37cfc7ad2706ef573a16cc14c200abecc4bee501
+  NetService: 139df37cf9608747b24536412e3555178fb72e1d
 
 PODFILE CHECKSUM: 018a1f4df546d2776a82ea29b4afc3076c2a199a
 

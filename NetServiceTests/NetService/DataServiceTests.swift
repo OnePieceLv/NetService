@@ -48,7 +48,7 @@ class BaseDataServiceTests: BaseTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let urlString = "https://httpbin.org/get"
         let api = TestAPI(with: urlString)
-        var response: DataResponse?
+        var response: DataResponse!
         let exception = self.expectation(description: "\(api.urlString)")
         api.async { (request) in
             response = request.response
@@ -59,9 +59,15 @@ class BaseDataServiceTests: BaseTestCase {
         if let response = response, let responseString = response.responseString {
             print(responseString)
         }
-        XCTAssertNotNil(response?.result.success)
-        XCTAssertNotNil(response?.response)
-        XCTAssertNotNil(response?.responseString)
+        XCTAssertEqual(response.statusCode, 200)
+        XCTAssertTrue(response.result.isSuccess)
+        XCTAssertNotNil(response.result.success)
+        XCTAssertNotNil(response.value)
+        XCTAssertFalse(response.result.isFailure)
+        XCTAssertNil(response.error)
+        XCTAssertNil(response.result.failure)
+        XCTAssertNotNil(response.response)
+        XCTAssertNotNil(response.responseString)
     }
     
     func testSync() throws {
@@ -70,8 +76,8 @@ class BaseDataServiceTests: BaseTestCase {
         let res = api.sync()
 
         XCTAssertNotNil(res.response)
-        XCTAssertEqual(res.response?.statusCode, 200)
-        XCTAssertNotNil(res.response?.responseString, "response string must be not nil")
+        XCTAssertEqual(res.response.statusCode, 200)
+        XCTAssertNotNil(res.response.responseString, "response string must be not nil")
         if let response = res.response, let responseString = response.responseString {
             print(responseString)
         }
@@ -102,13 +108,13 @@ class BaseDataServiceTests: BaseTestCase {
             exception.fulfill()
         }
         waitForExpectations(timeout: 60, handler: nil)
-        XCTAssertNotNil(api.response?.error)
+//        XCTAssertNotNil(api.response?.error)
         XCTAssertEqual(api.response?.statusCode, 503)
         
         let urlString2 = "https://httpbin.org/status/504"
         var api2 = TestAPI(with: urlString2)
         api2 = api2.setMethod(method: .DELETE).sync()
-        XCTAssertNotNil(api2.response?.error)
+//        XCTAssertNotNil(api2.response?.error)
         XCTAssertEqual(api2.response?.statusCode, 504)
 
     }

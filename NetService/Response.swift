@@ -136,7 +136,7 @@ public struct DownloadResponse: Responseable {
     public let resumeData: Data?
     
     public var statusCode: Int {
-        return response?.statusCode ?? -1
+        return response?.statusCode ?? -10000
     }
 
     public var result: Result<URL, Error>

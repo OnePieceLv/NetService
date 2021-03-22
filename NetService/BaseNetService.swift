@@ -171,11 +171,15 @@ open class DataNetService: NSObject, NetServiceProtocol {
 
     public var baseService: NetServiceRequest = NetServiceRequest()
         
-    public var error: Error? {
-        return response?.error
+    open var error: Error? {
+        return response.error
+    }
+    
+    open var statusCode: Int {
+        return response.statusCode
     }
         
-    public var response: DataResponse?
+    public var response: DataResponse!
     
     var requestType: Requestable?
     
@@ -310,10 +314,14 @@ open class DownloadNetService: NSObject, NetServiceProtocol {
     
     var downloadType: Downloadable?
     
-    public var response: DownloadResponse?
+    public var response: DownloadResponse!
     
-    public var error: Error? {
-        return response?.error
+    open var error: Error? {
+        return response.error
+    }
+    
+    open var statusCode: Int {
+        return response.statusCode
     }
     
     private var _resumeData: Data?
