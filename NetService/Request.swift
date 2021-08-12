@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol RequestConvertible: class {
+public protocol RequestConvertible: AnyObject {
     func asURLRequest(with httpbuilder: NetServiceBuilder, parameters: [String: Any]) throws -> URLRequest
 }
 
