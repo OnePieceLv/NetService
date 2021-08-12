@@ -53,7 +53,7 @@ public struct NetServiceBuilder {
     
     public var cacheControl: [NetServiceBuilder.CacheControl]?
     
-    public var allowsCellularAccess: Bool = false
+    public var allowsCellularAccess: Bool = true
     
     public var headers: [String : String] = NetServiceBuilder.HTTPHeader.defaultFields
     
@@ -78,7 +78,7 @@ public extension NetServiceBuilder {
          acceptEncoding: [ContentEncoding]? = nil,
          contentEncoding: [ContentEncoding]? = nil,
          cacheControl: [NetServiceBuilder.CacheControl]? = nil,
-         allowsCellularAccess: Bool = false,
+         allowsCellularAccess: Bool = true,
          headers: [String : String] = NetServiceBuilder.HTTPHeader.defaultFields,
          handleCookies: Bool = false,
          usePipelining: Bool = false,
