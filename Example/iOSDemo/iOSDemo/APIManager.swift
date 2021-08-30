@@ -132,7 +132,6 @@ class BaseDownloadManager: DownloadNetService, NetServiceRequestProtocol {
 class TestMiddleware: Middleware {
     
     func afterReceive<Response>(_ result: Response) -> Response where Response : Responseable {
-        print(result.response)
         return result
     }
     

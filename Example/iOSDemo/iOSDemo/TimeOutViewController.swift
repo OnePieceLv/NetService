@@ -1,14 +1,14 @@
 //
-//  ViewController.swift
+//  TimeOutViewController.swift
 //  iOSDemo
 //
-//  Created by steven on 2021/1/29.
+//  Created by steven on 2021/8/30.
 //
 
-import UIKit
+import Foundation
 import NetService
 
-class DataAPI: BaseAPIManager {
+class TimeOutAPI: BaseAPIManager {
     
     
     override var urlString: String {
@@ -33,7 +33,7 @@ class DataAPI: BaseAPIManager {
     }
 }
 
-class DataServiceViewController: UITableViewController {
+class TimeOutViewController: UITableViewController {
     
     private var responseContent: ResponseContent = ResponseContent(headers: [:], body: nil)
     
@@ -52,7 +52,7 @@ class DataServiceViewController: UITableViewController {
     
     @objc func refresh() -> Void {
         refreshControl?.beginRefreshing()
-        let api = DataAPI(with: url, method: method)
+        let api = TimeOutAPI(with: url, method: method)
         api.retryPolicy = TestRetryPolicy()
         api.middlewares = [TestMiddleware()]
         api.async { [weak self] (request) in
@@ -60,8 +60,8 @@ class DataServiceViewController: UITableViewController {
             if let headers = request.response?.response?.allHeaderFields as? [String: String] {
                 self.responseContent.headers = headers
             }
-            if let body = request.response?.responseString {
-                self.responseContent.body = body
+            if let error = request.response?.error as NSError? {
+                self.responseContent.body = "errorCode: \(error.code),\n errorDomain: \(error.domain),\n reason: \(error.localizedDescription)"
             }
             self.tableView.reloadData()
             self.refreshControl?.endRefreshing()
@@ -114,4 +114,3 @@ class DataServiceViewController: UITableViewController {
     
     
 }
-

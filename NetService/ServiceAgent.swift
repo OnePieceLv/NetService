@@ -51,9 +51,6 @@ public final class ServiceAgent: NSObject {
     private override init() {
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = NetServiceBuilder.HTTPHeader.defaultFields
-        if #available(iOS 11.0, *) {
-            configuration.waitsForConnectivity = true
-        }
         configuration.allowsCellularAccess = true
         manager = URLSessionManager(configuration:configuration, queue: serviceQueue)
         super.init()
@@ -63,9 +60,6 @@ public final class ServiceAgent: NSObject {
     public init(configurate: ((_ configuration: URLSessionConfiguration) -> URLSessionConfiguration)? = nil, serverTrustPolicyManager: ServerTrustPolicyManager? = nil) {
         var configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = NetServiceBuilder.HTTPHeader.defaultFields
-        if #available(iOS 11.0, *) {
-            configuration.waitsForConnectivity = true
-        }
         configuration.allowsCellularAccess = true
         configuration = configurate?(configuration) ?? configuration
         manager = URLSessionManager(configuration: configuration,
@@ -90,9 +84,11 @@ extension ServiceAgent: Service {
             let config = configuration
             config.httpAdditionalHeaders = NetServiceBuilder.HTTPHeader.defaultFields
             config.allowsCellularAccess = true
-            if #available(iOS 11.0, *) {
-                configuration.waitsForConnectivity = true
-            }
+            /// 关于 waitsForConnectivity 的作用请看：https://useyourloaf.com/blog/urlsession-waiting-for-connectivity/
+            /// waitsForConnectivity 会影响 timeout 设置，如果 waitsForConnectivity 为 true，则请求会根据 timeoutIntervalForResource 的值（默认为7天）等待。无法触发超时。
+//            if #available(iOS 11.0, *) {
+//                configuration.waitsForConnectivity = true
+//            }
             return config
         }
         return client

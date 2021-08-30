@@ -15,6 +15,7 @@ struct RequestContent {
         case normal = 0
         case download
         case upload
+        case timeout
         
         func name() -> String {
             switch self {
@@ -24,6 +25,8 @@ struct RequestContent {
                 return "下载"
             case .upload:
                 return "上传"
+            case .timeout:
+                return "超时"
             }
         }
     }
@@ -55,6 +58,21 @@ class HomeTableViewController: UITableViewController {
                         let main = UIStoryboard.init(name: "Main", bundle: nil)
                         let controller = main.instantiateViewController(identifier: "DataServiceViewController") as? DataServiceViewController
                         controller?.url = "https://httpbin.org/get"
+                        controller?.method = .GET
+                        navigation?.show(controller!, sender: navigation)
+                    }
+                )
+            ],
+            .timeout: [
+                RequestContent(
+                    name: "RequestTimeout",
+                    url: "https://httpbin.org/delay/30",
+                    method: "Get",
+                    identifier: "DataServiceSegue",
+                    action: { (navigation) in
+                        let main = UIStoryboard.init(name: "Main", bundle: nil)
+                        let controller = main.instantiateViewController(identifier: "TimeOutViewController") as? TimeOutViewController
+                        controller?.url = "https://httpbin.org/delay/30"
                         controller?.method = .GET
                         navigation?.show(controller!, sender: navigation)
                     }
