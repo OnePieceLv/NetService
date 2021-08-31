@@ -8,7 +8,7 @@
 import Foundation
 
 
-public protocol NetServiceProtocol: AnyObject {
+public protocol NetServiceTask: AnyObject {
     var baseService: NetServiceRequest { get set }
     var middlewares: [Middleware] { get set }
     var retryPolicy: RetryPolicyProtocol? { get set }
@@ -22,7 +22,7 @@ public protocol NetServiceProtocol: AnyObject {
     func suspend() -> Void
 }
 
-public extension NetServiceProtocol {
+public extension NetServiceTask {
 
     var state: NetServiceBuilder.State {
         baseService.state
@@ -59,7 +59,7 @@ public extension NetServiceProtocol {
     
 }
 
-extension NetServiceProtocol {
+extension NetServiceTask {
     
     func resume(task: URLSessionTask?) -> Void {
         self.task = task
@@ -71,7 +71,7 @@ extension NetServiceProtocol {
         task.resume()
     }
     
-    func prepareRequest(api: NetServiceProtocol) throws -> URLRequest {
+    func prepareRequest(api: NetServiceTask) throws -> URLRequest {
          try baseService.prepareRequest(api: api)
     }
     
@@ -126,8 +126,8 @@ public struct NetServiceRequest {
     
     fileprivate var builder: NetServiceBuilder = NetServiceBuilder()
     
-    private func conformance(api: NetServiceProtocol) throws -> (NetServiceRequestProtocol & NetServiceProtocol) {
-        if let netServiceAPI = api as? (NetServiceRequestProtocol & NetServiceProtocol) {
+    private func conformance(api: NetServiceTask) throws -> (NetServiceRequestProtocol & NetServiceTask) {
+        if let netServiceAPI = api as? (NetServiceRequestProtocol & NetServiceTask) {
             return netServiceAPI
         }
         throw APIError.customFailure(message: "Must be conformance APIRequestConvertible protocol")
@@ -137,7 +137,7 @@ public struct NetServiceRequest {
         self.userCredential = credential
     }
     
-    mutating func prepareRequest(api: NetServiceProtocol) throws -> URLRequest {
+    mutating func prepareRequest(api: NetServiceTask) throws -> URLRequest {
         let api = try conformance(api: api)
         var builderObj = NetServiceBuilder(urlString: api.urlString)
         builderObj.headers.merge(api.httpHeaders()) { (_, new) in new }
@@ -158,7 +158,7 @@ public struct NetServiceRequest {
 
 
 
-open class DataNetService: NSObject, NetServiceProtocol {
+open class DataNetService: NSObject, NetServiceTask {
     
     open var middlewares: [Middleware] = []
     
@@ -280,7 +280,7 @@ public extension DataNetService {
 }
 
 
-open class DownloadNetService: NSObject, NetServiceProtocol {
+open class DownloadNetService: NSObject, NetServiceTask {
     
     public var middlewares: [Middleware] = []
     
@@ -429,7 +429,7 @@ public extension DownloadNetService {
 }
 
 
-open class UploadNetService: NSObject, NetServiceProtocol {
+open class UploadNetService: NSObject, NetServiceTask {
     
     open var middlewares: [Middleware] = []
     

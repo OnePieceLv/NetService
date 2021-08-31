@@ -13,7 +13,7 @@ public protocol Service: AnyObject {
     
     var isInBackgroundSession: Bool { get }
     
-    subscript(_ task: URLSessionTask) -> NetServiceProtocol? { get set }
+    subscript(_ task: URLSessionTask) -> NetServiceTask? { get set }
     
     func data(with request: URLRequest,
               parameter: URLSessionParameter,
@@ -42,7 +42,7 @@ public final class ServiceAgent: NSObject {
     
     var manager: URLSessionManager
     
-    private var requestMap: [Int: NetServiceProtocol] = [:]
+    private var requestMap: [Int: NetServiceTask] = [:]
 
     private var lock: NSLock = NSLock()
     
@@ -94,7 +94,7 @@ extension ServiceAgent: Service {
         return client
     }()
     
-    public subscript(task: URLSessionTask) -> NetServiceProtocol? {
+    public subscript(task: URLSessionTask) -> NetServiceTask? {
         get {
             lock.lock()
             defer { lock.unlock() }

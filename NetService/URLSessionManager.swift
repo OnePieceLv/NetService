@@ -164,7 +164,7 @@ extension URLSessionManager {
 
 // MARK: - RetryRequest
 extension URLSessionManager {
-    func retryNewTask(old task: URLSessionTask) -> (NetServiceProtocol?, URLSessionTask?) {
+    func retryNewTask(old task: URLSessionTask) -> (NetServiceTask?, URLSessionTask?) {
         var newTask: URLSessionTask?
         guard let request = service?[task] else {
             return (nil, task)
